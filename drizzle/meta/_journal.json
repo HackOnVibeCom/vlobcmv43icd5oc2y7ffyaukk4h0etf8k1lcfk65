@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1786744182836,
+      "tag": "0000_dashing_christian_walker",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1786745878019,
+      "tag": "0001_worried_zarda",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1786751207897,
+      "tag": "0002_icy_rogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1786755890577,
+      "tag": "0003_faulty_black_tarantula",
+      "breakpoints": true
+    }
+  ]
+}
