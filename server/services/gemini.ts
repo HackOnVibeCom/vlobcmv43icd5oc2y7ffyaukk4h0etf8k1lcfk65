@@ -71,6 +71,7 @@ export async function generateCopyForPlatform(context: SourceContext, platform: 
 
   for (const model of models) {
     try {
+        console.log(`[gemini] starting fetch: model=${model} platform=${platform} baseUrl=${baseUrl}`);
         const response = await fetch(`${baseUrl}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -84,6 +85,7 @@ export async function generateCopyForPlatform(context: SourceContext, platform: 
           }),
           signal: AbortSignal.timeout(25_000),
         });
+        console.log(`[gemini] fetch returned: model=${model} status=${response.status}`);
 
         if (!response.ok) {
           failures.push(`${model}:${response.status}`);
