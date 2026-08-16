@@ -183,5 +183,5 @@ export async function generatePosterCopy(context: SourceContext): Promise<Genera
 }
 
 export function createImagePrompt(context: SourceContext) {
-  return `A moody, abstract editorial photograph evoking the feeling of ${context.name}. Depict the product's core idea through a clear visual metaphor derived from this description: ${context.description.slice(0, 700)}. Pure atmosphere and mood — think fine-art photography or a magazine cover background, not a screenshot or app interface. Clean art direction, rich detail, deliberate negative space left open for a designer to add elements afterward. Colour and light do the storytelling; there are no readable marks, icons, or interface elements anywhere in the frame.`;
+  return `A moody, editorial campaign photograph evoking the feeling of ${context.name}. Depict the product's core idea through a clear visual metaphor derived from this description: ${context.description.slice(0, 700)}. Think fine-art photography or a magazine cover background. Clean art direction, rich detail, deliberate negative space for composition. Colour and light do the storytelling.`;
 }
