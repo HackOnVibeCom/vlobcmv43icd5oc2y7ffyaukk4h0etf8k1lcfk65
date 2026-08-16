@@ -42,5 +42,7 @@ export function getClerkSecretKey() {
 export function getStripeConfig() {
   const secretKey = env("STRIPE_SECRET_KEY");
   if (!secretKey) throw new Error("Stripe is not configured on the server.");
-  return { secretKey };
+  const webhookSecret = env("STRIPE_WEBHOOK_SECRET");
+  const premiumPriceId = env("STRIPE_PREMIUM_PRICE_ID");
+  return { secretKey, webhookSecret, premiumPriceId };
 }

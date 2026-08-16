@@ -7,7 +7,6 @@ import {
   getGuestImageAllowance,
   getImageUsageForPeriod,
   incrementImageUsage,
-  listOutputVersions,
   saveCampaignImage,
   setCampaignOutput,
 } from "../db";
@@ -20,19 +19,6 @@ import { computePatternInsights } from "../services/patternInsights";
 import { buildLaunchChecklist } from "../services/launchChecklist";
 import { packKeywordField } from "../services/keywordPacker";
 import { generateABVariants } from "../services/abVariants";
-import { checkCompliance } from "../services/complianceChecker";
-import { scoreReadability } from "../services/readabilityScore";
-import { researchKeywords } from "../services/keywordResearch";
-import { generateCompetitorMap } from "../services/competitorMap";
-import { localizeCopy, SUPPORTED_LOCALES, type LocaleCode } from "../services/localization";
-import { generatePRAngles } from "../services/prAngles";
-import { generateFAQ } from "../services/faqGenerator";
-import { buildSEOPreview } from "../services/seoPreview";
-import { generateAltText } from "../services/altTextGenerator";
-import { buildRatingSnippet } from "../services/ratingSnippet";
-import { checkMetaLimit } from "../services/metaLimitMeter";
-import { generateBlogOutline } from "../services/blogOutline";
-import { scoreSubjectLine } from "../services/subjectLineScore";
 import { generateSocialPreviewImage } from "../services/socialImageGenerator";
 import { contextFromText, extractBriefContext, extractStoreContext, type SourceContext } from "../services/source";
 
@@ -115,7 +101,7 @@ export const generatorRouter = router({
         sourceText: input.context.description,
         contextJson: JSON.stringify(input.context),
       });
-      await Promise.all(input.outputs.map(output => setCampaignOutput(campaignId, output, "generate")));
+      await Promise.all(input.outputs.map(output => setCampaignOutput(campaignId, output)));
       return { campaignId };
     }),
 
@@ -134,7 +120,7 @@ export const generatorRouter = router({
           sourceText: context.description,
           contextJson: JSON.stringify(context),
         });
-        await Promise.all(outputs.map(output => setCampaignOutput(campaignId!, output, "generate")));
+        await Promise.all(outputs.map(output => setCampaignOutput(campaignId!, output)));
       }
 
       return { campaignId, context, outputs, saved: Boolean(campaignId) };
@@ -150,7 +136,7 @@ export const generatorRouter = router({
       if (!campaign) throw new TRPCError({ code: "NOT_FOUND", message: "Campaign not found." });
       const context = JSON.parse(campaign.contextJson) as SourceContext;
       const output = await generateCopyForPlatform(context, input.platform);
-      await setCampaignOutput(campaign.id, output, "regenerate");
+      await setCampaignOutput(campaign.id, output);
       return output;
     }),
 
@@ -259,115 +245,6 @@ export const generatorRouter = router({
         throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "A/B generation failed." });
       }
     }),
-
-  /** #5 Store compliance checker — deterministic, deeper policy-pattern rules than the launch checklist. */
-  checkCompliance: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(({ input }) => checkCompliance(input.context)),
-
-  /** #24 Readability/SEO score — real Flesch-Kincaid formula + keyword density, zero AI. */
-  scoreReadability: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(({ input }) => scoreReadability(input.context)),
-
-  /** #22 Keyword research — category-grounded suggestion engine with estimated volume/competition. */
-  researchKeywords: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(({ input }) => researchKeywords(input.context)),
-
-  /** #31 Live SEO preview — mock Google snippet + social card, updates with copy instantly. */
-  seoPreview: publicProcedure
-    .input(z.object({ context: sourceContextSchema, socialContent: z.string().max(3_000).optional() }))
-    .query(({ input }) => buildSEOPreview(input.context, input.socialContent)),
-
-  /** #2 Version diff/history — every saved output version for one campaign+platform, newest first. */
-  outputVersions: protectedProcedure
-    .input(z.object({ campaignId: z.number().int().positive(), platform: platformSchema }))
-    .query(async ({ ctx, input }) => {
-      const campaign = await getCampaignForUser(input.campaignId, ctx.user.id);
-      if (!campaign) throw new TRPCError({ code: "NOT_FOUND", message: "Campaign not found." });
-      return listOutputVersions(input.campaignId, input.platform);
-    }),
-
-  /** #6 Competitor positioning map — AI names real comparable apps + generates gap copy, grounded in app context. */
-  competitorMap: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(async ({ input }) => {
-      try {
-        return await generateCompetitorMap(input.context);
-      } catch (error) {
-        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Competitor map generation failed." });
-      }
-    }),
-
-  /** #7 Localization pass — same copy in 2-3 languages with locale-aware tone, not literal translation. */
-  localizeCopy: publicProcedure
-    .input(z.object({
-      context: sourceContextSchema,
-      platform: platformSchema,
-      content: z.string().trim().min(1).max(3_000),
-      locales: z.array(z.enum(SUPPORTED_LOCALES.map(l => l.code) as [LocaleCode, ...LocaleCode[]])).min(1).max(3).optional(),
-    }))
-    .mutation(async ({ input }) => {
-      try {
-        return await localizeCopy(input.context, input.platform, input.content, input.locales ?? []);
-      } catch (error) {
-        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Localization failed." });
-      }
-    }),
-
-  /** #25 Backlink/PR angle generator — specific journalist story angles from real app USPs. */
-  prAngles: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(async ({ input }) => {
-      try {
-        return await generatePRAngles(input.context);
-      } catch (error) {
-        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "PR angle generation failed." });
-      }
-    }),
-
-  /** #26 Auto-generated FAQ — "People Also Ask" style for the app's category, grounded in real context. */
-  generateFAQ: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(async ({ input }) => {
-      try {
-        return await generateFAQ(input.context);
-      } catch (error) {
-        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "FAQ generation failed." });
-      }
-    }),
-
-  /** #28 Alt-text/image SEO — deterministic templated alt text per extracted screenshot. */
-  altText: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(({ input }) => generateAltText(input.context)),
-
-  /** #29 Schema-rich review/rating snippet — real AggregateRating JSON-LD from extracted rating data. */
-  ratingSnippet: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(({ input }) => buildRatingSnippet(input.context)),
-
-  /** #32 Meta description char-limit meter — standalone deterministic util, live-typing safe. */
-  metaLimit: publicProcedure
-    .input(z.object({ text: z.string().max(5_000) }))
-    .query(({ input }) => checkMetaLimit(input.text)),
-
-  /** #35 Blog post title/outline generator — grounded in real app context. */
-  blogOutline: publicProcedure
-    .input(z.object({ context: sourceContextSchema }))
-    .query(async ({ input }) => {
-      try {
-        return await generateBlogOutline(input.context);
-      } catch (error) {
-        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Blog outline generation failed." });
-      }
-    }),
-
-  /** #36 Email subject-line SEO/open-rate scoring — deterministic, mirrors listingScore.ts pattern. */
-  scoreSubjectLine: publicProcedure
-    .input(z.object({ subject: z.string().max(500) }))
-    .query(({ input }) => scoreSubjectLine(input.subject)),
 
   /** #37 Social preview image auto-gen — per-platform aspect ratio, reuses generateImage(). */
   generateSocialImage: publicProcedure
