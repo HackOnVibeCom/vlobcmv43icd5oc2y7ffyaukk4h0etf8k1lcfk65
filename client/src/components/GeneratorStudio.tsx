@@ -89,6 +89,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
   const [statuses, setStatuses] = useState<Record<Platform, Status>>(() => Object.fromEntries(platformMeta.map(item => [item.id, "idle"])) as Record<Platform, Status>);
   const [campaignId, setCampaignId] = useState<number | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [generatedImageText, setGeneratedImageText] = useState<string | null>(null);
   const [customPrompt, setCustomPrompt] = useState("");
   const [expandedScore, setExpandedScore] = useState<Platform | null>(null);
   const [expandedReason, setExpandedReason] = useState<Platform | null>(null);
@@ -122,6 +123,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
     setOutputs({});
     setCampaignId(null);
     setGeneratedImage(null);
+    setGeneratedImageText(null);
     setStatuses(Object.fromEntries(platformMeta.map(item => [item.id, "idle"])) as Record<Platform, Status>);
   }, [preset?.id, preset?.description, preset?.playStoreUrl]);
 
@@ -138,6 +140,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
     try {
       setCampaignId(null);
       setGeneratedImage(null);
+      setGeneratedImageText(null);
       setOutputs({});
       const source = await buildSource();
       const extracted = await prepare.mutateAsync(source as never) as CampaignContext;
@@ -217,6 +220,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
         ? await createImage.mutateAsync({ campaignId: campaignId!, customPrompt: customPrompt.trim() || undefined })
         : await createGuestImage.mutateAsync({ context });
       setGeneratedImage(image.url);
+      setGeneratedImageText(image.textUrl ?? null);
       setCustomPrompt("");
       if (isSignedIn) await usage.refetch();
       else await guestUsage.refetch();
@@ -384,7 +388,20 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
               </div>
             </div>
             <div className="image-bench__image">
-              {generatedImage ? <img src={generatedImage} alt={`Generated campaign visual for ${context.name}`} /> : <div className="image-placeholder"><ImagePlus size={24} /><span>Image output will appear here.</span></div>}
+              {generatedImage ? (
+                <div className="image-bench__variants">
+                  <div className="image-bench__variant">
+                    <span className="image-bench__variant-label">With text</span>
+                    <img src={generatedImageText ?? generatedImage} alt={`Generated campaign visual with text for ${context.name}`} />
+                  </div>
+                  <div className="image-bench__variant">
+                    <span className="image-bench__variant-label">Clean visual</span>
+                    <img src={generatedImage} alt={`Generated campaign visual for ${context.name}`} />
+                  </div>
+                </div>
+              ) : (
+                <div className="image-placeholder"><ImagePlus size={24} /><span>Image output will appear here.</span></div>
+              )}
             </div>
           </aside>
         )}

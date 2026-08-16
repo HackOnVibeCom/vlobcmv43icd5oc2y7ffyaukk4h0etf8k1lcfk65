@@ -40,7 +40,7 @@ export type GenerateImageResponse = {
 };
 
 const NO_TEXT_INSTRUCTION =
-  "no text, no letters, no words, no numbers, no typography, no captions, no logos, no watermarks, no signage — purely visual, photographic/illustrative only";
+  "abstract atmospheric photography style, pure mood and metaphor, no interface elements";
 
 function escapeXml(value: string): string {
   return value
