@@ -23,6 +23,8 @@ import { generateSocialPreviewImage } from "../services/socialImageGenerator";
 import { generateChangelog } from "../services/changelogGenerator";
 import { draftReviewResponse, getSampleReviews } from "../services/reviewResponder";
 import { regenerateWithTone, TONE_LABELS } from "../services/toneGenerator";
+import { generateCompetitorMap } from "../services/competitorMap";
+import { scoreCategoryBenchmark } from "../services/categoryBenchmark";
 import { contextFromText, extractBriefContext, extractStoreContext, type SourceContext } from "../services/source";
 
 const platformSchema = z.enum(PLATFORMS);
@@ -160,6 +162,22 @@ export const generatorRouter = router({
 
   /** Cross-app pattern insights, built from the signed-in user's own campaign/engagement history. */
   patternInsights: protectedProcedure.query(({ ctx }) => computePatternInsights(ctx.user.id)),
+
+  /** T5 — Competitor positioning map. AI-named plausible category comparables + a factual differentiation angle for each. Labeled as illustrative, not verified live data. */
+  competitorMap: publicProcedure
+    .input(z.object({ context: sourceContextSchema }))
+    .query(async ({ input }) => {
+      try {
+        return await generateCompetitorMap(input.context);
+      } catch (error) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Competitor map generation failed." });
+      }
+    }),
+
+  /** T6 — Category benchmark score. Deterministic, zero-AI heuristic check against category-relative norms. */
+  categoryBenchmark: publicProcedure
+    .input(z.object({ context: sourceContextSchema }))
+    .query(({ input }) => scoreCategoryBenchmark(input.context)),
 
   imageUsage: protectedProcedure.query(async ({ ctx }) => {
     const usage = await getImageUsageForPeriod(ctx.user.id, monthlyPeriod());

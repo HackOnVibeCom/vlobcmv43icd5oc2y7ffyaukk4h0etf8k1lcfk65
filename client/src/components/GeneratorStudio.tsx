@@ -35,6 +35,8 @@ import ShareLinks from "./ShareLinks";
 import MicrositeButton from "./MicrositeButton";
 import InsightsWidget from "./InsightsWidget";
 import LaunchChecklist from "./LaunchChecklist";
+import CategoryBenchmark from "./CategoryBenchmark";
+import CompetitorMap from "./CompetitorMap";
 import KeywordPacker from "./KeywordPacker";
 import ABVariantPanel from "./ABVariantPanel";
 import ToneTogglePanel from "./ToneTogglePanel";
@@ -454,6 +456,8 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
           <GuestSummaryCard platformCount={completedOutputs.length} />
         )}
         {context && <LaunchChecklist context={context} />}
+        {context && <CategoryBenchmark context={context} />}
+        {context && <CompetitorMap context={context} />}
         {context && <KeywordPacker context={context} />}
         {context && <ChangelogGenerator context={context} />}
         {context && <ReviewResponsePanel context={context} />}
