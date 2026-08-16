@@ -1,19 +1,17 @@
 /**
- * Image generation via Gemini 2.5 Flash Image ("Nano Banana") — free tier,
- * up to 500 requests/day. Unlike the old Cloudflare FLUX setup, this model
- * accepts an optional reference image (e.g. the app's real screenshot/logo),
- * so generated visuals can be grounded in the app's actual look rather than
- * a generic abstract render.
+ * Image generation via Cloudflare Workers AI (FLUX.1 [schnell]) — free tier,
+ * no billing card required. FLUX has no image-input support, so
+ * `referenceImageUrl` is accepted (to keep call sites unchanged) but ignored.
  */
 import { storagePut } from "server/storage";
-import { getGeminiConfig } from "../config";
+import { ENV } from "./env";
 
 export type GenerateImageOptions = {
   prompt: string;
   quality?: "low" | "medium" | "high";
   width?: number;
   height?: number;
-  /** Optional reference image (e.g. app screenshot/logo) to ground the generation in real branding. */
+  /** Accepted for call-site compatibility. FLUX can't ground on a reference image, so this is unused. */
   referenceImageUrl?: string;
 };
 
@@ -21,40 +19,24 @@ export type GenerateImageResponse = {
   url?: string;
 };
 
-async function fetchAsBase64(url: string): Promise<{ data: string; mimeType: string } | null> {
-  try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) return null;
-    const mimeType = res.headers.get("content-type")?.split(";")[0] ?? "image/png";
-    const buffer = Buffer.from(await res.arrayBuffer());
-    return { data: buffer.toString("base64"), mimeType };
-  } catch {
-    return null;
-  }
-}
-
 export async function generateImage(options: GenerateImageOptions): Promise<GenerateImageResponse> {
-  const { apiKey, baseUrl } = getGeminiConfig();
-  const model = "gemini-2.5-flash-image";
-
-  const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [];
-
-  if (options.referenceImageUrl) {
-    const reference = await fetchAsBase64(options.referenceImageUrl);
-    if (reference) {
-      parts.push({ inlineData: { mimeType: reference.mimeType, data: reference.data } });
-    }
+  if (!ENV.cloudflareAccountId || !ENV.cloudflareApiToken) {
+    throw new Error("CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_API_TOKEN are not configured.");
   }
-
-  parts.push({ text: options.prompt });
 
   const response = await fetch(
-    `${baseUrl}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    `https://api.cloudflare.com/client/v4/accounts/${ENV.cloudflareAccountId}/ai/run/@cf/black-forest-labs/flux-1-schnell`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${ENV.cloudflareApiToken}`,
+      },
       body: JSON.stringify({
-        contents: [{ role: "user", parts }],
+        prompt: options.prompt,
+        steps: 4,
+        ...(options.width ? { width: options.width } : {}),
+        ...(options.height ? { height: options.height } : {}),
       }),
       signal: AbortSignal.timeout(60_000),
     }
@@ -65,18 +47,12 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
     throw new Error(`Image generation failed (${response.status}): ${detail}`);
   }
 
-  const result = (await response.json()) as {
-    candidates?: Array<{ content?: { parts?: Array<{ inlineData?: { data?: string; mimeType?: string } }> } }>;
-  };
+  const result = (await response.json()) as { result?: { image?: string }; success: boolean; errors?: unknown[] };
+  const b64 = result.result?.image;
+  if (!b64) throw new Error("Image generation returned no data.");
 
-  const imagePart = result.candidates?.[0]?.content?.parts?.find(p => p.inlineData?.data);
-  const b64 = imagePart?.inlineData?.data;
-  if (!b64) throw new Error("Image generation returned no image data.");
-
-  const mimeType = imagePart?.inlineData?.mimeType ?? "image/png";
-  const ext = mimeType.split("/")[1] ?? "png";
   const buffer = Buffer.from(b64, "base64");
-  const { url } = await storagePut(`generated/${Date.now()}.${ext}`, buffer, mimeType);
+  const { url } = await storagePut(`generated/${Date.now()}.png`, buffer, "image/png");
   return { url };
 }
 
@@ -84,7 +60,9 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
 export async function listImageModels() {
   return {
     models: [
-      { model: "gemini-2.5-flash-image", id: "gemini-2.5-flash-image", quality: "medium" },
+      { model: "gpt-image-2-low", id: "gpt-image-2", quality: "low" },
+      { model: "gpt-image-2-medium", id: "gpt-image-2", quality: "medium" },
+      { model: "gpt-image-2-high", id: "gpt-image-2", quality: "high" },
     ],
   };
 }
