@@ -191,6 +191,28 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
     return { mode, file: brief ?? undefined };
   }
 
+  const SAMPLE_APP = {
+    name: "Wanderlist",
+    description:
+      "Wanderlist is a collaborative travel-planning app for small groups. Friends add destinations, restaurants, and activities to a shared trip board, vote on favorites, and see everything laid out on one map with a day-by-day itinerary. It syncs offline so the plan is still there with no signal. Built for groups of 2-8 planning a trip together, not solo travelers.",
+    category: "Travel",
+  };
+
+  function loadSampleCampaign() {
+    setMode("manual");
+    setDescription(SAMPLE_APP.description);
+    toast.success(`Loaded a sample app (${SAMPLE_APP.name}) — hit Generate to see it in action.`);
+  }
+
+  const guestChecklist = trpc.generator.launchChecklist.useQuery(
+    { context: context! },
+    { enabled: !isSignedIn && Boolean(context) }
+  );
+  const guestScore = trpc.generator.scoreListing.useQuery(
+    { content: outputs.appStore?.content ?? "", platform: "appStore", context: context! },
+    { enabled: !isSignedIn && Boolean(context) && Boolean(outputs.appStore?.content) }
+  );
+
   async function generateCampaign() {
     try {
       setCampaignId(null);
@@ -319,6 +341,13 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
             </button>
           ))}
         </div>
+
+        {!isSignedIn && !context && (
+          <button type="button" className="sample-campaign-link" onClick={loadSampleCampaign}>
+            <WandSparkles size={13} strokeWidth={1.8} aria-hidden="true" />
+            Not sure where to start? Try a sample app
+          </button>
+        )}
 
         <div className="source-field">
           {mode === "url" && <Input value={url} onChange={event => setUrl(event.target.value)} placeholder="Paste an App Store or Google Play URL" aria-label="App store URL" />}
@@ -453,7 +482,11 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
 
         {isSignedIn && campaignId && <InsightsWidget />}
         {!isSignedIn && context && (
-          <GuestSummaryCard platformCount={completedOutputs.length} />
+          <GuestSummaryCard
+            platformCount={completedOutputs.length}
+            topScore={guestScore.data ? { grade: guestScore.data.grade, total: guestScore.data.total, maxTotal: guestScore.data.maxTotal } : null}
+            checklistPassed={guestChecklist.data?.passCount}
+          />
         )}
         {context && <LaunchChecklist context={context} />}
         {context && <CategoryBenchmark context={context} />}
