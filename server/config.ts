@@ -3,10 +3,10 @@ const env = (name: string) => process.env[name]?.trim();
 // Model fallback ladder — fastest to most capable.
 // Override any slot via GEMINI_MODEL_1..4 env vars; defaults cover the common case.
 const MODEL_DEFAULTS = [
+  "gemini-flash-latest",
   "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
   "gemini-2.0-flash",
-  "gemini-2.0-flash-lite",
-  "gemini-1.5-flash",
 ];
 
 export function getGeminiConfig() {
@@ -29,11 +29,4 @@ export function getClerkSecretKey() {
   const secretKey = env("CLERK_SECRET_KEY");
   if (!secretKey) throw new Error("Clerk is not configured on the server.");
   return secretKey;
-}
-
-export function getStripeConfig() {
-  const secretKey = env("STRIPE_SECRET_KEY");
-  const webhookSecret = env("STRIPE_WEBHOOK_SECRET");
-  const premiumPriceId = env("STRIPE_PREMIUM_PRICE_ID");
-  return { secretKey, webhookSecret, premiumPriceId };
 }
