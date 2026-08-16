@@ -125,5 +125,11 @@ export async function generateAllPlatformCopy(context: SourceContext) {
 }
 
 export function createImagePrompt(context: SourceContext) {
-  return `Create an editorial app-launch campaign visual for ${context.name}. Depict the product's core idea through a clear visual metaphor derived from this description: ${context.description.slice(0, 700)}. Clean art direction, rich detail, deliberate negative space, no readable words, no logos, no watermark.`;
+  return `Create an editorial app-launch campaign visual for ${context.name}. Depict the product's core idea through a clear visual metaphor derived from this description: ${context.description.slice(0, 700)}. Clean art direction, rich detail, deliberate negative space, composed to leave clear space for text to be added afterward.
+
+Strict rules:
+- Do NOT render any text, words, letters, numbers, wordmarks, or app store badges anywhere in the image.
+- Do NOT attempt to reproduce or invent a logo — use color, shape, and mood to evoke the brand instead.
+- If a reference image is provided, use only its color palette, iconography style, and mood as inspiration — do not copy any text or UI elements from it verbatim.
+- No watermark.`;
 }
