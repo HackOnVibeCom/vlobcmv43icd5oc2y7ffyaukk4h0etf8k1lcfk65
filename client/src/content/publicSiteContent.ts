@@ -21,7 +21,7 @@ export const pricingPlans = [
     name: "Guest",
     price: "No account",
     summary: "A straightforward way to test the campaign desk before you save work.",
-    items: ["Six platform copy drafts", "10 visuals in seven days", "No saved campaign history"],
+    items: ["Six platform copy drafts, in 7 languages", "Per-platform copy + one-click upload buttons", "Markdown and PDF export", "10 visuals in seven days", "No saved campaign history"],
     tone: "plain",
   },
   {
@@ -51,7 +51,15 @@ export const faqItems = [
   },
   {
     question: "Can I use PITCHFORGE before I sign in?",
-    answer: "Yes. Guests can make a campaign and create up to 10 visuals during a seven-day allowance. Signing in adds saved campaigns and a monthly free visual allowance.",
+    answer: "Yes. Guests can pick a language, generate all six platform drafts, copy or upload each one directly to its platform, export markdown or PDF, and create up to 10 visuals during a seven-day allowance — no account required. Signing in adds saved campaigns and a monthly free visual allowance.",
+  },
+  {
+    question: "Can I generate copy in another language?",
+    answer: "Yes. Choose a language before generating — English, Spanish, French, Hindi, German, Portuguese, or Japanese — and PITCHFORGE writes natively in that language rather than translating afterward. Available to guests and signed-in members alike.",
+  },
+  {
+    question: "How do the per-platform copy and upload buttons work?",
+    answer: "Each output card has its own Copy button, which copies only that platform's text. Twitter/X and LinkedIn additionally get an Upload button: X opens pre-filled with the text and link; LinkedIn's official share link only accepts a URL (they removed text prefill), so the button copies your text to the clipboard first, then opens LinkedIn's post box — paste and publish. Instagram, App Store Connect, Play Console, and Product Hunt don't expose any public compose intent, so those cards use Copy only.",
   },
   {
     question: "What is included with a free account?",

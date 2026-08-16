@@ -15,10 +15,11 @@ export default function ABVariantPanel({
   platform: Platform;
   onPickVariant: (content: string) => void;
 }) {
-  const [result, setResult] = useState<Awaited<ReturnType<typeof generateAB.mutateAsync>> | null>(null);
+  type ABResult = { variants: Array<{ angle: string; content: string; characterCount: number }>; winner: number; winnerAngle: string; criticReason: string };
+  const [result, setResult] = useState<ABResult | null>(null);
 
   const generateAB = trpc.generator.generateAB.useMutation({
-    onSuccess: (data) => setResult(data),
+    onSuccess: (data) => setResult(data as ABResult),
     onError: (e) => toast.error(e.message),
   });
 
@@ -54,7 +55,7 @@ export default function ABVariantPanel({
             Critic picked <b>{result.winnerAngle}</b> — {result.criticReason}
           </p>
           <div className="ab-variants">
-            {result.variants.map((v, i) => (
+            {result.variants.map((v: { angle: string; content: string; characterCount: number }, i: number) => (
               <div key={i} className={`ab-variant ${i === result.winner ? "ab-variant--winner" : ""}`}>
                 <div className="ab-variant__head">
                   <span className="ab-angle">{v.angle}</span>

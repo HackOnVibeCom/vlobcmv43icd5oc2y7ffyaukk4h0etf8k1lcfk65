@@ -57,6 +57,27 @@ The client calls the API via a relative `/api/trpc` path — no backend URL is h
 6. After first deploy, run `npm run db:push` once against the production `DATABASE_URL` (via Railway's shell, or locally with the production `DATABASE_URL` set temporarily)
 7. Copy the Railway-issued public URL, paste it wherever judges/reviewers need it
 
+## Features (guest + signed-in, no login required unless noted)
+
+**Generation**
+- 6-platform copy from URL / brief upload / manual description
+- **Language selector** — pick the output language (English, Spanish, French, Hindi, German, Portuguese, Japanese) *before* generating; copy is written natively in that language, not translated after the fact
+- Per-platform regenerate, A/B variant generator with AI critic auto-pick, 6-angle tone toggle
+
+**Quality engines (zero AI)**
+- ASO scoring (A–F, per-rule breakdown), launch readiness checklist, iOS keyword field packer, "why this copy" reasoning panel
+
+**Publishing & sharing (per output card, scoped to that card's own text only)**
+- **Copy button** — copies only that platform's generated text, never the whole campaign
+- **Upload to `<Platform>` button** — Twitter/X and LinkedIn only, the only two with a real public compose intent. X opens pre-filled with text+link. LinkedIn's official share endpoint accepts a URL only (they deprecated text prefill), so the button copies the text to your clipboard first, then opens LinkedIn's compose box with the link attached — paste and post. Instagram, App Store Connect, Play Console, and Product Hunt have no public compose/prefill intent at all, so those cards only get the Copy button — click it, then paste into that platform's own post box.
+- Additional one-click share links: WhatsApp, Telegram, Email, Facebook, Reddit
+- **Export markdown** and **Export PDF** (browser print-to-PDF, no extra dependency) for the full 6-platform campaign
+
+**Ongoing use**
+- Changelog / What's New generator, review response drafter
+
+All of the above — including language selection, per-platform copy/upload, and PDF export — work fully for guests with no account.
+
 ## Notes
 
 - Never commit `.env` — it's gitignored. Only `.env.example` (placeholders) is tracked.

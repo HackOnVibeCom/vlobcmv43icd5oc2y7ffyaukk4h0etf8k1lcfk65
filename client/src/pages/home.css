@@ -30,6 +30,7 @@
 .pf-nav { height: 72px; padding: 0 40px; border-bottom: 1px solid var(--pf-line); display: flex; align-items: center; justify-content: space-between; gap: 24px; position: relative; z-index: 10; }
 .pf-brand, .pf-legal__brand { color: var(--pf-ink); text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; letter-spacing: -0.04em; }
 .pf-brand span, .pf-legal__brand span { width: 30px; height: 30px; display: grid; place-items: center; background: var(--pf-signal); color: #fff; font: 10px "JetBrains Mono", monospace; letter-spacing: -0.1em; }
+.pf-brand__logo { width: 30px; height: 30px; object-fit: contain; border-radius: 6px; }
 .pf-nav__utility { display: flex; align-items: center; gap: 19px; }
 .pf-nav__product-links, .pf-nav__account-actions { display: flex; align-items: center; gap: 18px; }
 .pf-nav__product-links { padding-right: 19px; border-right: 1px solid var(--pf-line); }

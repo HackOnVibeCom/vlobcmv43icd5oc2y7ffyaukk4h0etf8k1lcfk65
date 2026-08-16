@@ -20,7 +20,7 @@ export function PublicChrome({ children }: { children: ReactNode }) {
   return <div className="pf-site">
     <PublicMotionLayer />
     <nav className="pf-nav" aria-label="Primary navigation">
-      <Link className="pf-brand" href="/"><span>PF</span>PITCHFORGE</Link>
+      <Link className="pf-brand" href="/"><img src="/assets/pitchforge-logo-final.png" alt="PITCHFORGE" className="pf-brand__logo" />PITCHFORGE</Link>
       <div className="pf-nav__utility">
         <div className="pf-nav__product-links" aria-label="Explore PITCHFORGE pages">
           {navItems.map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}

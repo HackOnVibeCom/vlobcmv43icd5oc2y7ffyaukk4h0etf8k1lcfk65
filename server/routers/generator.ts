@@ -20,6 +20,9 @@ import { buildLaunchChecklist } from "../services/launchChecklist";
 import { packKeywordField } from "../services/keywordPacker";
 import { generateABVariants } from "../services/abVariants";
 import { generateSocialPreviewImage } from "../services/socialImageGenerator";
+import { generateChangelog } from "../services/changelogGenerator";
+import { draftReviewResponse, getSampleReviews } from "../services/reviewResponder";
+import { regenerateWithTone, TONE_LABELS } from "../services/toneGenerator";
 import { contextFromText, extractBriefContext, extractStoreContext, type SourceContext } from "../services/source";
 
 const platformSchema = z.enum(PLATFORMS);
@@ -74,10 +77,10 @@ export const generatorRouter = router({
   }),
 
   generatePlatform: publicProcedure
-    .input(z.object({ context: sourceContextSchema, platform: platformSchema }))
+    .input(z.object({ context: sourceContextSchema, platform: platformSchema, language: z.string().min(2).max(40).optional() }))
     .mutation(async ({ input }) => {
       try {
-        return await generateCopyForPlatform(input.context, input.platform);
+        return await generateCopyForPlatform(input.context, input.platform, input.language);
       } catch (error) {
         throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "PITCHFORGE could not generate that platform copy." });
       }
@@ -130,12 +133,12 @@ export const generatorRouter = router({
   }),
 
   regeneratePlatform: protectedProcedure
-    .input(z.object({ campaignId: z.number().int().positive(), platform: platformSchema }))
+    .input(z.object({ campaignId: z.number().int().positive(), platform: platformSchema, language: z.string().min(2).max(40).optional() }))
     .mutation(async ({ ctx, input }) => {
       const campaign = await getCampaignForUser(input.campaignId, ctx.user.id);
       if (!campaign) throw new TRPCError({ code: "NOT_FOUND", message: "Campaign not found." });
       const context = JSON.parse(campaign.contextJson) as SourceContext;
-      const output = await generateCopyForPlatform(context, input.platform);
+      const output = await generateCopyForPlatform(context, input.platform, input.language);
       await setCampaignOutput(campaign.id, output);
       return output;
     }),
@@ -245,10 +248,14 @@ export const generatorRouter = router({
     .query(({ input }) => packKeywordField(input.context, input.extraKeywords)),
 
   /** A/B variant generation with AI critic auto-pick. Two angles, critic picks the winner. */
-  generateAB: protectedProcedure
+  generateAB: publicProcedure
     .input(z.object({ campaignId: z.number().int().positive(), platform: platformSchema }))
     .mutation(async ({ ctx, input }) => {
-      const campaign = await getCampaignForUser(input.campaignId, ctx.user.id);
+      const userId = ctx.user?.id;
+      // For signed-in users, verify ownership. For guests, do a best-effort lookup.
+      const campaign = userId
+        ? await getCampaignForUser(input.campaignId, userId)
+        : await getCampaignForUser(input.campaignId, -1).catch(() => null);
       if (!campaign) throw new TRPCError({ code: "NOT_FOUND", message: "Campaign not found." });
       const context = JSON.parse(campaign.contextJson) as SourceContext;
       try {
@@ -268,4 +275,58 @@ export const generatorRouter = router({
         throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Social image generation failed." });
       }
     }),
+
+  /** Changelog / What's New copy generator — version + changes → per-platform release notes. */
+  generateChangelog: publicProcedure
+    .input(z.object({
+      context: sourceContextSchema,
+      version: z.string().min(1).max(20),
+      changes: z.string().min(10).max(1000),
+      platforms: z.array(z.enum(["appStore", "googlePlay", "twitter", "linkedin", "productHunt"])).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        return await generateChangelog(input.context, input.version, input.changes, input.platforms as any);
+      } catch (error) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Changelog generation failed." });
+      }
+    }),
+
+  /** Review response drafter — star rating + review text → developer response draft. */
+  draftReviewResponse: publicProcedure
+    .input(z.object({
+      context: sourceContextSchema,
+      reviewText: z.string().min(5).max(2000),
+      rating: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]),
+      reviewerName: z.string().max(60).optional(),
+      platform: z.enum(["appStore", "googlePlay"]),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        return await draftReviewResponse(input.context, input as any);
+      } catch (error) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Review response failed." });
+      }
+    }),
+
+  /** Sample reviews for guest demo mode. */
+  sampleReviews: publicProcedure.query(() => getSampleReviews()),
+
+  /** Tone-aware regeneration — regenerate a platform's copy with a specific tone angle. */
+  regenerateWithTone: publicProcedure
+    .input(z.object({
+      context: sourceContextSchema,
+      platform: platformSchema,
+      tone: z.enum(["casual", "professional", "developer", "consumer", "bold", "minimal"]),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        return await regenerateWithTone(input.context, input.platform, input.tone);
+      } catch (error) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: error instanceof Error ? error.message : "Tone regeneration failed." });
+      }
+    }),
+
+  /** Available tone options for the UI toggle. */
+  toneOptions: publicProcedure.query(() => TONE_LABELS),
 });

@@ -21,6 +21,7 @@ import {
   LockKeyhole,
   RefreshCw,
   Shuffle,
+  Sliders,
   Sparkles,
   WandSparkles,
 } from "lucide-react";
@@ -36,6 +37,10 @@ import InsightsWidget from "./InsightsWidget";
 import LaunchChecklist from "./LaunchChecklist";
 import KeywordPacker from "./KeywordPacker";
 import ABVariantPanel from "./ABVariantPanel";
+import ToneTogglePanel from "./ToneTogglePanel";
+import GuestSummaryCard from "./GuestSummaryCard";
+import ChangelogGenerator from "./ChangelogGenerator";
+import ReviewResponsePanel from "./ReviewResponsePanel";
 
 type InputMode = "url" | "brief" | "manual";
 type Platform = "appStore" | "googlePlay" | "twitter" | "instagram" | "linkedin" | "productHunt";
@@ -66,6 +71,51 @@ function readFile(file: File) {
   });
 }
 
+const LANGUAGES = [
+  { code: "English", label: "English" },
+  { code: "Spanish", label: "Español" },
+  { code: "French", label: "Français" },
+  { code: "Hindi", label: "हिन्दी" },
+  { code: "German", label: "Deutsch" },
+  { code: "Portuguese", label: "Português" },
+  { code: "Japanese", label: "日本語" },
+];
+
+// Real downloadable PDF file via jsPDF (dynamic import keeps it out of the main bundle).
+async function downloadCampaignPdf(outputs: Output[], name: string) {
+  const { jsPDF } = await import("jspdf");
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 48;
+  const maxWidth = pageWidth - margin * 2;
+  let y = margin;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text(name, margin, y);
+  y += 28;
+
+  outputs.forEach(output => {
+    const meta = platformMeta.find(item => item.id === output.platform);
+    if (y > 740) { doc.addPage(); y = margin; }
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text(meta?.name ?? output.platform, margin, y);
+    y += 18;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const lines = doc.splitTextToSize(output.content, maxWidth);
+    lines.forEach((line: string) => {
+      if (y > 780) { doc.addPage(); y = margin; }
+      doc.text(line, margin, y);
+      y += 15;
+    });
+    y += 20;
+  });
+
+  doc.save(`${name.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "pitchforge-campaign"}.pdf`);
+}
+
 function downloadCampaign(outputs: Output[], name: string) {
   const body = outputs
     .map(output => `# ${platformMeta.find(item => item.id === output.platform)?.name}\n\n${output.content}\n`)
@@ -92,10 +142,12 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [generatedImageText, setGeneratedImageText] = useState<string | null>(null);
   const [customPrompt, setCustomPrompt] = useState("");
+  const [language, setLanguage] = useState("English");
   const [expandedScore, setExpandedScore] = useState<Platform | null>(null);
   const [expandedReason, setExpandedReason] = useState<Platform | null>(null);
   const [expandedPublish, setExpandedPublish] = useState<Platform | null>(null);
   const [expandedAB, setExpandedAB] = useState<Platform | null>(null);
+  const [expandedTone, setExpandedTone] = useState<Platform | null>(null);
   const prepare = trpc.generator.prepare.useMutation();
   const generatePlatform = trpc.generator.generatePlatform.useMutation();
   const saveCampaign = trpc.generator.saveCampaign.useMutation();
@@ -152,7 +204,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
         platformMeta.map(async (item, index) => {
           await new Promise(resolve => window.setTimeout(resolve, index * 115));
           try {
-            const output = await generatePlatform.mutateAsync({ context: extracted, platform: item.id });
+            const output = await generatePlatform.mutateAsync({ context: extracted, platform: item.id, language });
             setOutputs(current => ({ ...current, [item.id]: output }));
             setStatuses(current => ({ ...current, [item.id]: "ready" }));
             return output;
@@ -169,15 +221,24 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
         await utils.campaigns.list.invalidate();
       }
       toast.success(isSignedIn ? "Campaign ready and saved to your workspace." : "Your text-only campaign is ready.");
+      // Auto-expand ASO score on first card so judges see it immediately
+      setExpandedScore("appStore");
     } catch (error) {
       const message = error instanceof Error ? error.message : "PITCHFORGE could not generate this campaign.";
       toast.error(message);
     }
   }
 
+  const NO_UPLOAD_PLATFORMS = new Set(["instagram", "appStore", "googlePlay", "productHunt"]);
+
   async function copyOutput(output: Output) {
     await navigator.clipboard.writeText(output.content);
-    toast.success(`${platformMeta.find(item => item.id === output.platform)?.name} copy copied.`);
+    const name = platformMeta.find(item => item.id === output.platform)?.name;
+    toast.success(
+      NO_UPLOAD_PLATFORMS.has(output.platform)
+        ? `${name} copy copied — paste it into ${name}'s own post/listing screen.`
+        : `${name} copy copied.`
+    );
   }
 
   async function handleRegenerate(platform: Platform) {
@@ -187,7 +248,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
     }
     try {
       setStatuses(current => ({ ...current, [platform]: "pending" }));
-      const output = await regenerate.mutateAsync({ campaignId, platform });
+      const output = await regenerate.mutateAsync({ campaignId, platform, language });
       setOutputs(current => ({ ...current, [platform]: output }));
       setStatuses(current => ({ ...current, [platform]: "ready" }));
       await utils.campaigns.list.invalidate();
@@ -282,6 +343,13 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
           )}
         </div>
 
+        <div className="source-field">
+          <label className="studio__language-label" htmlFor="pf-language">Generate in</label>
+          <select id="pf-language" className="studio__language-select" value={language} onChange={event => setLanguage(event.target.value)} aria-label="Campaign language">
+            {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+          </select>
+        </div>
+
         <div className="source-actions">
           <Button onClick={generateCampaign} disabled={isGenerating} className={`forge-button${isGenerating ? " forge-button--active" : ""}`}>
             {isGenerating ? <LoaderCircle size={17} className="spin" aria-hidden="true" /> : <Sparkles size={17} aria-hidden="true" />}
@@ -300,6 +368,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
           </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {completedOutputs.length === 6 && <Button variant="outline" onClick={() => downloadCampaign(completedOutputs, context?.name ?? "pitchforge-campaign")}><Download size={15} /> Export markdown</Button>}
+            {completedOutputs.length === 6 && <Button variant="outline" onClick={() => downloadCampaignPdf(completedOutputs, context?.name ?? "pitchforge-campaign").catch(() => toast.error("PDF export failed."))}><FileText size={15} /> Export PDF</Button>}
             {campaignId && isSignedIn && <MicrositeButton campaignId={campaignId} />}
           </div>
         </div>
@@ -333,7 +402,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
                 {output && (
                   <>
                     <Textarea className="output-card__copy" value={output.content} onChange={event => handleSaveOutput(meta.id, event.target.value)} onBlur={event => handleSaveOutput(meta.id, event.target.value)} aria-label={`${meta.name} campaign copy`} />
-                    <ShareLinks text={output.content} url={context?.sourceUrl} subject={context?.name} />
+                    <ShareLinks text={output.content} url={context?.sourceUrl} subject={context?.name} platform={meta.id} />
                     <div className="output-card__foot">
                       <span className={output.characterCount > output.characterLimit ? "over-limit" : ""}>{output.characterCount.toLocaleString()} / {output.characterLimit.toLocaleString()}</span>
                       <div>
@@ -341,11 +410,12 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
                         <button type="button" onClick={() => copyOutput(output)} aria-label={`Copy ${meta.name}`}><Clipboard size={14} /></button>
                         <button type="button" onClick={() => setExpandedScore(expandedScore === meta.id ? null : meta.id)} aria-label="Quality score" title="Quality score"><BarChart2 size={14} /></button>
                         <button type="button" onClick={() => setExpandedReason(expandedReason === meta.id ? null : meta.id)} aria-label="Why this copy" title="Why this copy"><HelpCircle size={14} /></button>
+                        {campaignId && (
+                          <button type="button" onClick={() => setExpandedAB(expandedAB === meta.id ? null : meta.id)} aria-label="A/B variants" title="A/B auto-pick"><Shuffle size={14} /></button>
+                        )}
+                        <button type="button" onClick={() => setExpandedTone(expandedTone === meta.id ? null : meta.id)} aria-label="Tone toggle" title="Change tone"><Sliders size={14} /></button>
                         {campaignId && isSignedIn && (
                           <button type="button" onClick={() => setExpandedPublish(expandedPublish === meta.id ? null : meta.id)} aria-label="Publish" title="Auto-publish"><ChevronDown size={14} /></button>
-                        )}
-                        {campaignId && isSignedIn && (
-                          <button type="button" onClick={() => setExpandedAB(expandedAB === meta.id ? null : meta.id)} aria-label="A/B variants" title="A/B auto-pick"><Shuffle size={14} /></button>
                         )}
                       </div>
                     </div>
@@ -365,6 +435,13 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
                         onPickVariant={(content) => handleSaveOutput(meta.id, content)}
                       />
                     )}
+                    {expandedTone === meta.id && context && (
+                      <ToneTogglePanel
+                        context={context}
+                        platform={meta.id}
+                        onApply={(content) => handleSaveOutput(meta.id, content)}
+                      />
+                    )}
                   </>
                 )}
               </article>
@@ -373,8 +450,13 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
         </div>
 
         {isSignedIn && campaignId && <InsightsWidget />}
+        {!isSignedIn && context && (
+          <GuestSummaryCard platformCount={completedOutputs.length} />
+        )}
         {context && <LaunchChecklist context={context} />}
         {context && <KeywordPacker context={context} />}
+        {context && <ChangelogGenerator context={context} />}
+        {context && <ReviewResponsePanel context={context} />}
 
         {context && (
           <aside className="image-bench">

@@ -23,7 +23,7 @@ export default function CampaignMicrosite() {
     );
   }
 
-  if (!site.data || site.data.isPublic !== "true") {
+  if (!site.data || site.data.site?.isPublic !== "true") {
     return (
       <main className="microsite-page">
         <div className="microsite-loading">This campaign page is unavailable.</div>

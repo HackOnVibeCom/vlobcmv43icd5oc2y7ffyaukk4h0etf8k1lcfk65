@@ -41,3 +41,36 @@ export function buildShareLinks(text: string, url?: string, subject?: string): S
 export function openShareLink(href: string) {
   window.open(href, "_blank", "noopener,noreferrer,width=600,height=650");
 }
+
+/**
+ * One button per output card: "Upload to <platform>" — opens that exact
+ * platform's own compose/submit screen loaded with that card's copy.
+ * Only Twitter/X supports a real text-prefill intent. LinkedIn's official
+ * share-offsite endpoint accepts url only (no text param — they deprecated
+ * the old shareArticle endpoint that used to support it), so we copy the
+ * text to the clipboard first and open the compose box with the link
+ * attached: paste is one keystroke away.
+ * Instagram, App Store Connect, Play Console, and Product Hunt expose no
+ * public prefill/compose intent at all — those platforms only get
+ * "copy to clipboard", no upload button.
+ */
+const PLATFORMS_WITH_UPLOAD = new Set(["twitter", "linkedin"]);
+
+export async function platformUploadUrl(platform: string, text: string, url?: string): Promise<{ label: string; href: string; copiedFirst: boolean } | null> {
+  if (!PLATFORMS_WITH_UPLOAD.has(platform)) return null;
+  const links = buildShareLinks(text, url);
+  if (platform === "twitter") {
+    return { label: "Upload to X / Twitter", href: links.twitter, copiedFirst: false };
+  }
+  // linkedin: copy text to clipboard first, then open the compose box (url-only prefill).
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    // clipboard access denied — link still opens, user can copy manually.
+  }
+  return {
+    label: "Upload to LinkedIn",
+    href: links.linkedin ?? `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url ?? "")}`,
+    copiedFirst: true,
+  };
+}
