@@ -26,6 +26,16 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+process.on("uncaughtException", err => {
+  console.error("uncaughtException:", err);
+});
+process.on("unhandledRejection", err => {
+  console.error("unhandledRejection:", err);
+});
+process.on("SIGTERM", () => {
+  console.error("Received SIGTERM — process is being told to shut down.");
+});
+
 async function startServer() {
   const app = express();
   const server = createServer(app);
