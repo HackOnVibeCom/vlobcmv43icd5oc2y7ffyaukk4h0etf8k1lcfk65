@@ -30,6 +30,7 @@ import "./generator-notes.css";
 import ASOScorePanel from "./ASOScorePanel";
 import ReasoningPanel from "./ReasoningPanel";
 import PublishPanel from "./PublishPanel";
+import ShareLinks from "./ShareLinks";
 import MicrositeButton from "./MicrositeButton";
 import InsightsWidget from "./InsightsWidget";
 import LaunchChecklist from "./LaunchChecklist";
@@ -332,6 +333,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
                 {output && (
                   <>
                     <Textarea className="output-card__copy" value={output.content} onChange={event => handleSaveOutput(meta.id, event.target.value)} onBlur={event => handleSaveOutput(meta.id, event.target.value)} aria-label={`${meta.name} campaign copy`} />
+                    <ShareLinks text={output.content} url={context?.sourceUrl} subject={context?.name} />
                     <div className="output-card__foot">
                       <span className={output.characterCount > output.characterLimit ? "over-limit" : ""}>{output.characterCount.toLocaleString()} / {output.characterLimit.toLocaleString()}</span>
                       <div>
