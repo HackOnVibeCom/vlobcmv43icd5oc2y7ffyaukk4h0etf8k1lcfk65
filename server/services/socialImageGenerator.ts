@@ -25,6 +25,8 @@ export const SOCIAL_IMAGE_SPECS: Record<Platform, { width: number; height: numbe
 
 export type SocialImageResult = {
   url: string;
+  /** Same visual with the app name/developer crisply overlaid as real text (never AI-rendered, so never gibberish). */
+  textUrl?: string;
   width: number;
   height: number;
   label: string;
@@ -35,8 +37,15 @@ export async function generateSocialPreviewImage(context: SourceContext, platfor
   const basePrompt = createImagePrompt(context);
   const prompt = `${basePrompt} Composed for a ${spec.label} social share card — leave breathing room at the edges since platforms crop this frame.`;
 
-  const { url } = await generateImage({ prompt, quality: "medium", width: spec.width, height: spec.height, referenceImageUrl: context.screenshots[0] });
+  const { url, textUrl } = await generateImage({
+    prompt,
+    quality: "medium",
+    width: spec.width,
+    height: spec.height,
+    referenceImageUrl: context.screenshots[0],
+    overlayText: { headline: context.name, subtext: context.developer },
+  });
   if (!url) throw new Error("Social preview image generation returned no image.");
 
-  return { url, width: spec.width, height: spec.height, label: spec.label };
+  return { url, textUrl, width: spec.width, height: spec.height, label: spec.label };
 }

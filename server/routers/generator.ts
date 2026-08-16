@@ -188,11 +188,16 @@ export const generatorRouter = router({
         throw new TRPCError({ code: "FORBIDDEN", message: "You have used your 10 guest image generations. Sign in for 20 monthly image credits or upgrade for unlimited images." });
       }
       const prompt = createImagePrompt(input.context);
-      const { url } = await generateImage({ prompt, quality: "medium", referenceImageUrl: input.context.screenshots[0] });
+      const { url, textUrl } = await generateImage({
+        prompt,
+        quality: "medium",
+        referenceImageUrl: input.context.screenshots[0],
+        overlayText: { headline: input.context.name, subtext: input.context.developer },
+      });
       if (!url) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "PITCHFORGE could not create that image. Please try again." });
       const usage = await consumeGuestImageCredit(ctx.guestId, 10);
       if (!usage) throw new TRPCError({ code: "FORBIDDEN", message: "You have used your 10 guest image generations. Sign in for more image credits." });
-      return { url, remaining: usage.remaining, expiresAt: usage.expiresAt };
+      return { url, textUrl, remaining: usage.remaining, expiresAt: usage.expiresAt };
     }),
 
   generateImage: protectedProcedure
@@ -212,11 +217,16 @@ export const generatorRouter = router({
 
       const context = JSON.parse(campaign.contextJson) as SourceContext;
       const prompt = input.customPrompt ?? createImagePrompt(context);
-      const { url } = await generateImage({ prompt, quality: isPremium ? "high" : "medium", referenceImageUrl: context.screenshots[0] });
+      const { url, textUrl } = await generateImage({
+        prompt,
+        quality: isPremium ? "high" : "medium",
+        referenceImageUrl: context.screenshots[0],
+        overlayText: { headline: context.name, subtext: context.developer },
+      });
       if (!url) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "PITCHFORGE could not create that image. Please try again." });
       const imageUsage = isPremium ? usage?.imageGenerationCount ?? 0 : await incrementImageUsage(ctx.user.id, period);
       await saveCampaignImage({ campaignId: campaign.id, userId: ctx.user.id, prompt, imageUrl: url });
-      return { url, prompt: isPremium ? prompt : undefined, remaining: isPremium ? null : Math.max(0, 20 - imageUsage) };
+      return { url, textUrl, prompt: isPremium ? prompt : undefined, remaining: isPremium ? null : Math.max(0, 20 - imageUsage) };
     }),
 
   /** Launch-readiness checklist — deterministic pass/fail per extracted app signal. */
