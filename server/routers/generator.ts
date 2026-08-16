@@ -12,7 +12,7 @@ import {
 } from "../db";
 import { generateImage } from "../_core/imageGeneration";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
-import { createImagePrompt, generateAllPlatformCopy, generateCopyForPlatform, PLATFORMS } from "../services/gemini";
+import { createImagePrompt, generateAllPlatformCopy, generateCopyForPlatform, generatePosterCopy, PLATFORMS } from "../services/gemini";
 import { scoreListing } from "../services/listingScore";
 import { explainGeneration } from "../services/reasoning";
 import { computePatternInsights } from "../services/patternInsights";
@@ -188,11 +188,12 @@ export const generatorRouter = router({
         throw new TRPCError({ code: "FORBIDDEN", message: "You have used your 10 guest image generations. Sign in for 20 monthly image credits or upgrade for unlimited images." });
       }
       const prompt = createImagePrompt(input.context);
+      const posterCopy = await generatePosterCopy(input.context).catch(() => ({ headline: input.context.name }));
       const { url, textUrl } = await generateImage({
         prompt,
         quality: "medium",
         referenceImageUrl: input.context.screenshots[0],
-        overlayText: { headline: input.context.name, subtext: input.context.developer },
+        overlayText: posterCopy,
       });
       if (!url) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "PITCHFORGE could not create that image. Please try again." });
       const usage = await consumeGuestImageCredit(ctx.guestId, 10);
@@ -217,11 +218,12 @@ export const generatorRouter = router({
 
       const context = JSON.parse(campaign.contextJson) as SourceContext;
       const prompt = input.customPrompt ?? createImagePrompt(context);
+      const posterCopy = await generatePosterCopy(context).catch(() => ({ headline: context.name }));
       const { url, textUrl } = await generateImage({
         prompt,
         quality: isPremium ? "high" : "medium",
         referenceImageUrl: context.screenshots[0],
-        overlayText: { headline: context.name, subtext: context.developer },
+        overlayText: posterCopy,
       });
       if (!url) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "PITCHFORGE could not create that image. Please try again." });
       const imageUsage = isPremium ? usage?.imageGenerationCount ?? 0 : await incrementImageUsage(ctx.user.id, period);

@@ -388,15 +388,23 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
               </div>
             </div>
             <div className="image-bench__image">
-              {generatedImage ? (
+              {(createImage.isPending || createGuestImage.isPending) ? (
+                <div className="image-placeholder"><LoaderCircle className="spin" size={24} /><span>Forging two posters…</span></div>
+              ) : generatedImage ? (
                 <div className="image-bench__variants">
                   <div className="image-bench__variant">
                     <span className="image-bench__variant-label">With text</span>
-                    <img src={generatedImageText ?? generatedImage} alt={`Generated campaign visual with text for ${context.name}`} />
+                    <img src={generatedImageText ?? generatedImage} alt={`Generated promotional poster for ${context.name}`} />
+                    <a className="image-bench__download" href={generatedImageText ?? generatedImage} download={`${context.name}-with-text.png`}>
+                      <Download size={13} /> Download
+                    </a>
                   </div>
                   <div className="image-bench__variant">
                     <span className="image-bench__variant-label">Clean visual</span>
-                    <img src={generatedImage} alt={`Generated campaign visual for ${context.name}`} />
+                    <img src={generatedImage} alt={`Generated clean campaign visual for ${context.name}`} />
+                    <a className="image-bench__download" href={generatedImage} download={`${context.name}-clean.png`}>
+                      <Download size={13} /> Download
+                    </a>
                   </div>
                 </div>
               ) : (

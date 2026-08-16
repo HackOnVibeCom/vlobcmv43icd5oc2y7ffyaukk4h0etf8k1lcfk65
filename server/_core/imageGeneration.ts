@@ -3,15 +3,14 @@
  * no billing card required. FLUX has no image-input support, so
  * `referenceImageUrl` is accepted (to keep call sites unchanged) but ignored.
  *
- * Text-in-image handling: FLUX (like most diffusion models) renders
- * on-image text as gibberish, so we never ask it to draw text. Instead:
- *   1. The prompt sent to FLUX always carries a hard "no text/letters/words"
- *      instruction, guaranteeing a clean visual.
- *   2. If `overlayText` is supplied, a second image is produced by
- *      compositing real, crisply-rendered SVG text on top of that same
- *      clean base with sharp — actual text, not model-hallucinated glyphs,
- *      so it can never come out as gibberish.
- * One FLUX call produces both outputs (clean + with-text), generated together.
+ * Two genuinely different posters come back from every call:
+ *   - `url`      — a clean, text-free visual (composition A).
+ *   - `textUrl`  — a second, differently-composed visual (composition B)
+ *                  with real promotional copy crisply overlaid via sharp/SVG.
+ *                  That text is actually rendered, not model-hallucinated,
+ *                  so it can never come out as gibberish.
+ * Both are separate FLUX generations (different art-direction prompts), not
+ * one image reused twice.
  */
 import sharp from "sharp";
 import { storagePut } from "server/storage";
@@ -25,22 +24,27 @@ export type GenerateImageOptions = {
   /** Accepted for call-site compatibility. FLUX can't ground on a reference image, so this is unused. */
   referenceImageUrl?: string;
   /**
-   * When provided, a second image is generated: the same clean visual with
-   * this text crisply composited on top (real rendered text — never
-   * AI-generated, so it's never gibberish).
+   * Real promotional copy to crisply overlay on the second poster. If
+   * omitted, both posters come back clean/text-free.
    */
   overlayText?: { headline: string; subtext?: string };
 };
 
 export type GenerateImageResponse = {
-  /** Clean visual, guaranteed free of any AI-rendered text/letters/logos. */
+  /** Composition A — clean visual, no text. */
   url?: string;
-  /** Only present when `overlayText` was requested: the same visual with real text overlaid. */
+  /** Composition B — different visual, with promotional text overlaid (only present when overlayText was given). */
   textUrl?: string;
 };
 
-const NO_TEXT_INSTRUCTION =
+const STYLE_KEYWORD_AVOID =
   "abstract atmospheric photography style, pure mood and metaphor, no interface elements";
+
+/** Two distinct art-direction angles so the pair never looks like the same image twice. */
+const COMPOSITION_VARIANTS = [
+  "Composition: bold hero-centered focal subject, dramatic directional lighting, shallow depth of field, tight framing.",
+  "Composition: wide environmental establishing shot, subject integrated into a larger scene, generous negative space at the edges, softer even lighting.",
+] as const;
 
 function escapeXml(value: string): string {
   return value
@@ -51,7 +55,6 @@ function escapeXml(value: string): string {
     .replace(/'/g, "&apos;");
 }
 
-/** Wraps text into lines that roughly fit `maxCharsPerLine`, breaking on word boundaries. */
 function wrapText(text: string, maxCharsPerLine: number): string[] {
   const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
@@ -135,14 +138,10 @@ async function compositeTextOverlay(
     .toBuffer();
 }
 
-export async function generateImage(options: GenerateImageOptions): Promise<GenerateImageResponse> {
+async function fluxGenerate(prompt: string, width?: number, height?: number): Promise<Buffer> {
   if (!ENV.cloudflareAccountId || !ENV.cloudflareApiToken) {
     throw new Error("CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_API_TOKEN are not configured.");
   }
-
-  const width = options.width ?? 1024;
-  const height = options.height ?? 1024;
-  const prompt = `${options.prompt} — ${NO_TEXT_INSTRUCTION}`;
 
   const response = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${ENV.cloudflareAccountId}/ai/run/@cf/black-forest-labs/flux-1-schnell`,
@@ -155,8 +154,8 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
       body: JSON.stringify({
         prompt,
         steps: 4,
-        ...(options.width ? { width: options.width } : {}),
-        ...(options.height ? { height: options.height } : {}),
+        ...(width ? { width } : {}),
+        ...(height ? { height } : {}),
       }),
       signal: AbortSignal.timeout(60_000),
     }
@@ -170,16 +169,34 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
   const result = (await response.json()) as { result?: { image?: string }; success: boolean; errors?: unknown[] };
   const b64 = result.result?.image;
   if (!b64) throw new Error("Image generation returned no data.");
+  return Buffer.from(b64, "base64");
+}
 
-  const baseBuffer = Buffer.from(b64, "base64");
-  const { url } = await storagePut(`generated/${Date.now()}.png`, baseBuffer, "image/png");
+export async function generateImage(options: GenerateImageOptions): Promise<GenerateImageResponse> {
+  const width = options.width ?? 1024;
+  const height = options.height ?? 1024;
+
+  const promptA = `${options.prompt} ${COMPOSITION_VARIANTS[0]} — ${STYLE_KEYWORD_AVOID}`;
 
   if (!options.overlayText) {
+    const bufferA = await fluxGenerate(promptA, options.width, options.height);
+    const { url } = await storagePut(`generated/${Date.now()}-a.png`, bufferA, "image/png");
     return { url };
   }
 
-  const textBuffer = await compositeTextOverlay(baseBuffer, width, height, options.overlayText);
-  const { url: textUrl } = await storagePut(`generated/${Date.now()}-text.png`, textBuffer, "image/png");
+  const promptB = `${options.prompt} ${COMPOSITION_VARIANTS[1]} — ${STYLE_KEYWORD_AVOID}`;
+
+  const [bufferA, bufferB] = await Promise.all([
+    fluxGenerate(promptA, options.width, options.height),
+    fluxGenerate(promptB, options.width, options.height),
+  ]);
+
+  const [{ url }, textBuffer] = await Promise.all([
+    storagePut(`generated/${Date.now()}-a.png`, bufferA, "image/png"),
+    compositeTextOverlay(bufferB, width, height, options.overlayText),
+  ]);
+
+  const { url: textUrl } = await storagePut(`generated/${Date.now()}-b-text.png`, textBuffer, "image/png");
 
   return { url, textUrl };
 }

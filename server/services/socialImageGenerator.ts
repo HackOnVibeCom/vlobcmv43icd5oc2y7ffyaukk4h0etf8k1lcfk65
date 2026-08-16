@@ -9,7 +9,7 @@
  * exists (createImagePrompt + generateImage).
  */
 
-import { createImagePrompt } from "./gemini";
+import { createImagePrompt, generatePosterCopy } from "./gemini";
 import { generateImage } from "../_core/imageGeneration";
 import type { Platform } from "./gemini";
 import type { SourceContext } from "./source";
@@ -43,7 +43,7 @@ export async function generateSocialPreviewImage(context: SourceContext, platfor
     width: spec.width,
     height: spec.height,
     referenceImageUrl: context.screenshots[0],
-    overlayText: { headline: context.name, subtext: context.developer },
+    overlayText: await generatePosterCopy(context).catch(() => ({ headline: context.name })),
   });
   if (!url) throw new Error("Social preview image generation returned no image.");
 
