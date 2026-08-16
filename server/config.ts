@@ -35,3 +35,12 @@ export function getClerkSecretKey() {
   if (!secretKey) throw new Error("Clerk is not configured on the server.");
   return secretKey;
 }
+
+// TODO: placeholder — replace with the real implementation once we confirm
+// exactly how server/products.ts and server/routers/billing.ts use this.
+// This stub only unblocks the build; it does not wire up real Stripe billing.
+export function getStripeConfig() {
+  const secretKey = env("STRIPE_SECRET_KEY");
+  if (!secretKey) throw new Error("Stripe is not configured on the server.");
+  return { secretKey };
+}
