@@ -53,6 +53,7 @@ import ContentCalendar from "./ContentCalendar";
 import PrivacyPolicyGenerator from "./PrivacyPolicyGenerator";
 import ReferralCodeGenerator from "./ReferralCodeGenerator";
 import OneClickLaunchPipeline from "./OneClickLaunchPipeline";
+import CompetitorReviewAttackEngine from "./CompetitorReviewAttackEngine";
 import "./launch-tools.css";
 
 type HubTab =
@@ -254,6 +255,7 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
 
         {activeTab === "competitors" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <CompetitorReviewAttackEngine context={context} />
             <CompetitorMap context={context} />
             <LocalizationEngine context={context} />
           </div>
