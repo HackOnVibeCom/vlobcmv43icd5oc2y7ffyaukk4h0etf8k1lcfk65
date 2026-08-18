@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Download, QrCode, Smartphone, Sparkles } from "lucide-react";
+import { Download, ExternalLink, QrCode, Smartphone, Sparkles } from "lucide-react";
 import "./launch-tools.css";
 
 type Context = {
@@ -15,9 +15,13 @@ type Context = {
 
 export default function AppStoreBadgeStudio({ context }: { context?: Context }) {
   const appName = context?.name || "Your App";
-  const [storeUrl, setStoreUrl] = useState(context?.sourceUrl || "https://pitchforge.app/demo");
+  const [storeUrl, setStoreUrl] = useState(context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.iwaskidnapped.app");
   const [frameTitle, setFrameTitle] = useState(`Scan to Download ${appName}`);
   const [frameSubtitle, setFrameSubtitle] = useState("Available on iOS & Android");
+
+  // Real live QR Code image URL via public QR API encoded directly with the storeUrl
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(storeUrl)}&color=ffffff&bgcolor=00000000&margin=0`;
+  const qrDownloadUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(storeUrl)}&margin=10`;
 
   // Generate SVG QR Code representation with clean pixel grid and store badges
   const handleDownloadCardSVG = () => {
@@ -38,39 +42,24 @@ export default function AppStoreBadgeStudio({ context }: { context?: Context }) 
   <!-- QR Frame Box -->
   <rect x="150" y="160" width="300" height="300" fill="#ffffff" rx="20" />
   
-  <!-- QR Code Matrix Graphic -->
-  <rect x="175" y="185" width="70" height="70" fill="#000000" rx="8" />
-  <rect x="190" y="200" width="40" height="40" fill="#ffffff" rx="4" />
-  <rect x="200" y="210" width="20" height="20" fill="#000000" rx="2" />
-
-  <rect x="355" y="185" width="70" height="70" fill="#000000" rx="8" />
-  <rect x="370" y="200" width="40" height="40" fill="#ffffff" rx="4" />
-  <rect x="380" y="210" width="20" height="20" fill="#000000" rx="2" />
-
-  <rect x="175" y="365" width="70" height="70" fill="#000000" rx="8" />
-  <rect x="190" y="380" width="40" height="40" fill="#ffffff" rx="4" />
-  <rect x="200" y="390" width="20" height="20" fill="#000000" rx="2" />
+  <!-- QR Image Embedding -->
+  <image href="${qrDownloadUrl}" x="165" y="175" width="270" height="270" />
 
   <!-- Center App Icon -->
-  <circle cx="300" cy="310" r="32" fill="#6366f1" />
-  <text x="300" y="318" fill="#ffffff" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" text-anchor="middle">${appName.charAt(0)}</text>
-
-  <!-- QR Alignment Grid Lines -->
-  <path d="M 270 200 L 330 200 M 270 230 L 330 230 M 270 260 L 330 260 M 355 280 L 420 280 M 355 310 L 420 310 M 175 280 L 250 280 M 270 360 L 420 360 M 270 390 L 420 390 M 270 420 L 420 420" stroke="#000000" stroke-width="6" stroke-linecap="round" />
+  <circle cx="300" cy="310" r="28" fill="#6366f1" />
+  <text x="300" y="318" fill="#ffffff" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">${appName.charAt(0)}</text>
 
   <!-- Store Badges Box -->
-  <!-- App Store Button -->
   <rect x="110" y="500" width="180" height="54" fill="#000000" rx="10" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
   <text x="175" y="522" fill="#ffffff" font-family="system-ui, sans-serif" font-size="10">Download on the</text>
   <text x="175" y="540" fill="#ffffff" font-family="system-ui, sans-serif" font-size="16" font-weight="bold">App Store</text>
 
-  <!-- Google Play Button -->
   <rect x="310" y="500" width="180" height="54" fill="#000000" rx="10" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
   <text x="375" y="522" fill="#ffffff" font-family="system-ui, sans-serif" font-size="10">GET IT ON</text>
   <text x="375" y="540" fill="#ffffff" font-family="system-ui, sans-serif" font-size="16" font-weight="bold">Google Play</text>
 
   <!-- URL Tag Footer -->
-  <text x="300" y="610" fill="#818cf8" font-family="system-ui, monospace" font-size="14" text-anchor="middle">${storeUrl}</text>
+  <text x="300" y="610" fill="#818cf8" font-family="system-ui, monospace" font-size="13" text-anchor="middle">${storeUrl}</text>
   <text x="300" y="690" fill="rgba(255,255,255,0.4)" font-family="system-ui, sans-serif" font-size="13" text-anchor="middle">Generated with PitchForge App Promotion Engine</text>
 </svg>`;
 
@@ -86,20 +75,30 @@ export default function AppStoreBadgeStudio({ context }: { context?: Context }) 
     toast.success("Downloaded Store QR & Download Badge Card (SVG)!");
   };
 
+  const handleDownloadPNG = () => {
+    window.open(qrDownloadUrl, "_blank");
+    toast.success("Opening high-res QR code image!");
+  };
+
   return (
     <div className="launch-tool-panel">
       <div className="launch-tool-header">
         <div className="launch-tool-title">
           <QrCode size={18} color="#818cf8" />
-          <span>App Store Smart QR Code & Store Badge Studio</span>
-          <span className="launch-tool-badge">Print & Digital Assets</span>
+          <span>App Store Real Scannable QR Code & Store Badge Studio</span>
+          <span className="launch-tool-badge">Live Scannable QR</span>
         </div>
-        <Button size="sm" variant="outline" onClick={handleDownloadCardSVG}>
-          <Download size={13} /> Download QR Card (SVG)
-        </Button>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <Button size="sm" variant="outline" onClick={handleDownloadPNG}>
+            <Download size={13} /> Download QR PNG
+          </Button>
+          <Button size="sm" variant="outline" onClick={handleDownloadCardSVG}>
+            <Download size={13} /> Download Card (SVG)
+          </Button>
+        </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", alignItems: "center" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem", alignItems: "center" }}>
         {/* Visual Card Preview */}
         <div
           style={{
@@ -114,32 +113,41 @@ export default function AppStoreBadgeStudio({ context }: { context?: Context }) 
             boxShadow: "0 15px 30px rgba(0,0,0,0.5)",
           }}
         >
-          <h4 style={{ margin: "0 0 0.25rem 0", color: "#fff", fontSize: "1.1rem" }}>{frameTitle}</h4>
+          <h4 style={{ margin: "0 0 0.25rem 0", color: "#fff", fontSize: "1.1rem", fontWeight: 700 }}>{frameTitle}</h4>
           <p style={{ margin: "0 0 1rem 0", color: "#94a3b8", fontSize: "0.85rem" }}>{frameSubtitle}</p>
 
-          {/* QR Box Visual */}
+          {/* Real Live QR Code Box */}
           <div
             style={{
-              width: "160px",
-              height: "160px",
-              background: "#fff",
+              width: "180px",
+              height: "180px",
+              background: "#ffffff",
               borderRadius: "16px",
-              padding: "12px",
+              padding: "10px",
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "center",
               marginBottom: "1rem",
               position: "relative",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-              <div style={{ width: 36, height: 36, background: "#000", borderRadius: 4 }} />
-              <div style={{ width: 36, height: 36, background: "#000", borderRadius: 4 }} />
-            </div>
-            {/* Center Logo */}
+            <img
+              src={qrApiUrl}
+              alt={`Scannable QR code linking to ${storeUrl}`}
+              style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "8px" }}
+              onError={(e) => {
+                // Fallback visual if offline
+                (e.target as HTMLElement).style.display = "none";
+              }}
+            />
+            {/* Center Brand Badge */}
             <div
               style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
                 width: 32,
                 height: 32,
                 borderRadius: "50%",
@@ -148,25 +156,27 @@ export default function AppStoreBadgeStudio({ context }: { context?: Context }) 
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontWeight: "bold",
+                fontWeight: 800,
                 fontSize: 14,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
+                border: "2px solid #fff",
               }}
             >
               {appName.charAt(0)}
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-              <div style={{ width: 36, height: 36, background: "#000", borderRadius: 4 }} />
-              <div style={{ width: 28, height: 28, border: "4px solid #000", borderRadius: 4 }} />
-            </div>
+          </div>
+
+          <div style={{ fontSize: "0.72rem", color: "#818cf8", fontFamily: "monospace", maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: "0.75rem" }}>
+            {storeUrl}
           </div>
 
           {/* Badges preview */}
           <div style={{ display: "flex", gap: "0.5rem", width: "100%", justifyContent: "center" }}>
-            <div style={{ background: "#000", border: "1px solid #333", borderRadius: "8px", padding: "0.35rem 0.6rem", fontSize: "0.75rem", color: "#fff" }}>
-               App Store
+            <div style={{ background: "#000", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "0.4rem 0.7rem", fontSize: "0.75rem", color: "#fff", display: "flex", alignItems: "center", gap: 4 }}>
+              <span></span> <span>App Store</span>
             </div>
-            <div style={{ background: "#000", border: "1px solid #333", borderRadius: "8px", padding: "0.35rem 0.6rem", fontSize: "0.75rem", color: "#fff" }}>
-              ▶ Google Play
+            <div style={{ background: "#000", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "0.4rem 0.7rem", fontSize: "0.75rem", color: "#fff", display: "flex", alignItems: "center", gap: 4 }}>
+              <span>▶</span> <span>Google Play</span>
             </div>
           </div>
         </div>
@@ -175,7 +185,7 @@ export default function AppStoreBadgeStudio({ context }: { context?: Context }) 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           <div>
             <label style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: 4, display: "block" }}>
-              Store URL / Universal Link:
+              Live Store URL / Universal Link (Encodes directly to QR):
             </label>
             <Input value={storeUrl} onChange={e => setStoreUrl(e.target.value)} />
           </div>
@@ -194,8 +204,8 @@ export default function AppStoreBadgeStudio({ context }: { context?: Context }) 
             <Input value={frameSubtitle} onChange={e => setFrameSubtitle(e.target.value)} />
           </div>
 
-          <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#10b981", display: "flex", alignItems: "center", gap: 5 }}>
-            <Sparkles size={14} /> Ready for physical launch flyers, roll-up banners, and press events.
+          <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#10b981", display: "flex", alignItems: "center", gap: 6 }}>
+            <Sparkles size={15} /> Real live QR code updates as you type — scan with your phone camera right now!
           </div>
         </div>
       </div>

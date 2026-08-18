@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Check, Clipboard, Code2, Smartphone, Sparkles, Terminal } from "lucide-react";
@@ -298,13 +298,185 @@ void showWhatsNew(BuildContext context) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  /* ── Interactive Device Mockup Visual ── */
+  const PhoneMockup = () => {
+    const phoneStyle: React.CSSProperties = {
+      width: 230,
+      minWidth: 230,
+      height: 450,
+      borderRadius: "30px",
+      border: "3px solid rgba(255,255,255,0.2)",
+      background: "#080c14",
+      padding: "0",
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+      boxShadow: "0 25px 60px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.08)",
+      position: "relative",
+      flexShrink: 0,
+    };
+
+    const statusBar: React.CSSProperties = {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "8px 16px",
+      fontSize: "0.68rem",
+      color: "#fff",
+      fontWeight: 600,
+    };
+
+    const notchStyle: React.CSSProperties = {
+      width: 84,
+      height: 22,
+      background: "#000",
+      borderRadius: "0 0 14px 14px",
+      position: "absolute",
+      top: 0,
+      left: "50%",
+      transform: "translateX(-50%)",
+      zIndex: 10,
+    };
+
+    const screenBody: React.CSSProperties = {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      padding: "12px",
+      overflow: "hidden",
+    };
+
+    if (feature === "viral_share") {
+      return (
+        <div style={phoneStyle}>
+          <div style={notchStyle} />
+          <div style={statusBar}><span>9:41</span><span>📶 🔋</span></div>
+          <div style={screenBody}>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ width: 56, height: 56, borderRadius: 14, background: "linear-gradient(135deg, #6366f1, #818cf8)", margin: "0 auto 10px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, color: "#fff", fontWeight: 800 }}>{appName.charAt(0)}</div>
+                <div style={{ color: "#fff", fontWeight: 700, fontSize: "0.85rem", marginBottom: 4 }}>{appName}</div>
+                <div style={{ color: "#94a3b8", fontSize: "0.65rem", marginBottom: 14 }}>Share with friends</div>
+              </div>
+            </div>
+            {/* Share Sheet Bottom */}
+            <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", padding: "12px", marginBottom: -12, marginLeft: -12, marginRight: -12 }}>
+              <div style={{ width: 36, height: 4, background: "rgba(255,255,255,0.2)", borderRadius: 2, margin: "0 auto 10px" }} />
+              <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 10 }}>
+                {[{ icon: "💬", label: "Messages", bg: "#22c55e" }, { icon: "📧", label: "Mail", bg: "#3b82f6" }, { icon: "🐦", label: "Twitter", bg: "#0ea5e9" }, { icon: "📋", label: "Copy", bg: "#64748b" }].map(s => (
+                  <div key={s.label} style={{ textAlign: "center" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, marginBottom: 3 }}>{s.icon}</div>
+                    <span style={{ fontSize: "0.55rem", color: "#94a3b8" }}>{s.label}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 8, padding: "6px 8px", fontSize: "0.6rem", color: "#cbd5e1" }}>
+                Check out {appName} — it completely transformed my workflow! {url.slice(0, 26)}...
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (feature === "smart_rate") {
+      return (
+        <div style={phoneStyle}>
+          <div style={notchStyle} />
+          <div style={statusBar}><span>9:41</span><span>📶 🔋</span></div>
+          <div style={screenBody}>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {/* Rating Dialog */}
+              <div style={{ background: "#1e293b", borderRadius: 16, padding: "18px 14px", textAlign: "center", width: "100%", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 30px rgba(0,0,0,0.5)" }}>
+                <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#fff", marginBottom: 4 }}>Enjoying {appName}?</div>
+                <div style={{ fontSize: "0.65rem", color: "#94a3b8", marginBottom: 12 }}>Tap a star to rate your experience</div>
+                <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 14 }}>
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <span key={i} style={{ fontSize: 24, cursor: "pointer", filter: i <= 4 ? "none" : "grayscale(0.5)" }}>{i <= 4 ? "⭐" : "☆"}</span>
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <div style={{ flex: 1, padding: "8px", borderRadius: 8, background: "rgba(255,255,255,0.08)", color: "#94a3b8", fontSize: "0.7rem", fontWeight: 600, textAlign: "center" }}>Not Now</div>
+                  <div style={{ flex: 1, padding: "8px", borderRadius: 8, background: "#6366f1", color: "#fff", fontSize: "0.7rem", fontWeight: 600, textAlign: "center" }}>Submit</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (feature === "whats_new") {
+      return (
+        <div style={phoneStyle}>
+          <div style={notchStyle} />
+          <div style={statusBar}><span>9:41</span><span>📶 🔋</span></div>
+          <div style={screenBody}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+              {/* What's New Bottom Sheet */}
+              <div style={{ background: "#1e293b", borderRadius: "16px 16px 0 0", padding: "16px 12px", marginBottom: -12, marginLeft: -12, marginRight: -12 }}>
+                <div style={{ width: 36, height: 4, background: "rgba(255,255,255,0.2)", borderRadius: 2, margin: "0 auto 12px" }} />
+                <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#fff", marginBottom: 14 }}>What's New in {appName}</div>
+                {[
+                  { icon: "⚡", title: "Instant Generation", desc: "Launch-ready posts in seconds" },
+                  { icon: "✅", title: "ASO Score Engine", desc: "Rank higher on the store" },
+                  { icon: "📊", title: "Feed Mockups", desc: "Preview on 6 platforms" },
+                ].map(item => (
+                  <div key={item.title} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(99,102,241,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>{item.icon}</div>
+                    <div>
+                      <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "#fff" }}>{item.title}</div>
+                      <div style={{ fontSize: "0.62rem", color: "#94a3b8" }}>{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+                <div style={{ background: "#6366f1", borderRadius: 10, padding: "10px", textAlign: "center", color: "#fff", fontWeight: 600, fontSize: "0.8rem", marginTop: 8 }}>Continue</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // deep_link
+    return (
+      <div style={phoneStyle}>
+        <div style={notchStyle} />
+        <div style={statusBar}><span>9:41</span><span>📶 🔋</span></div>
+        <div style={screenBody}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
+            {/* Safari-like URL bar */}
+            <div style={{ width: "100%", background: "#1e293b", borderRadius: 10, padding: "8px 10px", display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ fontSize: "0.6rem", color: "#22c55e" }}>🔒</span>
+              <span style={{ fontSize: "0.62rem", color: "#cbd5e1", fontFamily: "monospace" }}>{appName.toLowerCase().replace(/[^a-z]/g, "")}.app/ref=tw</span>
+            </div>
+            {/* App Open Banner */}
+            <div style={{ width: "100%", background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)", borderRadius: 12, padding: "10px", display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #6366f1, #818cf8)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 800, fontSize: 16, flexShrink: 0 }}>{appName.charAt(0)}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "#fff" }}>{appName}</div>
+                <div style={{ fontSize: "0.6rem", color: "#94a3b8" }}>Open in app</div>
+              </div>
+              <div style={{ background: "#6366f1", borderRadius: 8, padding: "5px 10px", fontSize: "0.65rem", fontWeight: 600, color: "#fff" }}>OPEN</div>
+            </div>
+            {/* Attribution Arrow */}
+            <div style={{ textAlign: "center", marginTop: 6 }}>
+              <div style={{ fontSize: "0.6rem", color: "#818cf8" }}>↓ Deep Link Captured</div>
+              <div style={{ fontSize: "0.55rem", color: "#64748b", marginTop: 2 }}>source=twitter, campaign=launch</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="launch-tool-panel">
       <div className="launch-tool-header">
         <div className="launch-tool-title">
           <Code2 size={18} color="#818cf8" />
           <span>In-App Promotion Code Integration SDK</span>
-          <span className="launch-tool-badge">Production Code</span>
+          <span className="launch-tool-badge">Production Code + Device Mockup</span>
         </div>
         <Button size="sm" variant="outline" onClick={handleCopy}>
           {copied ? <Check size={13} /> : <Clipboard size={13} />}
@@ -353,8 +525,20 @@ void showWhatsNew(BuildContext context) {
         </div>
       </div>
 
-      <div className="pitch-body-box" style={{ fontFamily: "monospace", fontSize: "0.82rem", background: "#0b0f19", overflowX: "auto" }}>
-        {code}
+      {/* Two Column Layout: Phone Mockup on Left + Code on Right */}
+      <div style={{ display: "grid", gridTemplateColumns: "230px 1fr", gap: "1.25rem", alignItems: "flex-start" }}>
+        {/* Device Visual */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
+          <PhoneMockup />
+          <span style={{ fontSize: "0.7rem", color: "#818cf8", fontWeight: 600 }}>
+            {feature === "viral_share" ? "📱 Native Share Sheet" : feature === "smart_rate" ? "⭐ Store Review Prompt" : feature === "whats_new" ? "✨ What's New Modal" : "⚡ Universal Deep Link"}
+          </span>
+        </div>
+
+        {/* Code Snippet Box */}
+        <div className="pitch-body-box" style={{ fontFamily: "monospace", fontSize: "0.82rem", background: "#0b0f19", overflowX: "auto", height: 450, margin: 0 }}>
+          {code}
+        </div>
       </div>
     </div>
   );
