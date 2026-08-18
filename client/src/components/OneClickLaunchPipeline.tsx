@@ -253,11 +253,11 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
       {/* 🌟 Master Header */}
       <div
         style={{
-          background: "linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(16, 185, 129, 0.08) 100%)",
-          border: "1px solid rgba(99, 102, 241, 0.3)",
+          background: "linear-gradient(135deg, #131b2e 0%, #0d1527 50%, #0a1120 100%)",
+          border: "1px solid rgba(99, 102, 241, 0.45)",
           borderRadius: "24px",
-          padding: "2rem",
-          boxShadow: "0 25px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+          padding: "2.2rem",
+          boxShadow: "0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15)",
           position: "relative",
           overflow: "hidden",
         }}
@@ -356,21 +356,22 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
       {/* 🚀 Autonomous Pipeline Execution Steps */}
       {(isProcessing || pipelineFinished) && (
         <div style={{ marginTop: "1.5rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: 6 }}>
-            <Layers size={15} /> Autonomous Execution Sequence
+          <div style={{ fontSize: "0.88rem", fontWeight: 800, color: "#818cf8", textTransform: "uppercase", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: 6 }}>
+            <Layers size={16} /> Autonomous Execution Sequence
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "0.75rem" }}>
             {steps.map(step => (
               <div
                 key={step.id}
                 style={{
-                  background: step.status === "done" ? "rgba(16, 185, 129, 0.06)" : step.status === "running" ? "rgba(99, 102, 241, 0.12)" : "rgba(0, 0, 0, 0.2)",
-                  border: `1px solid ${step.status === "done" ? "rgba(16, 185, 129, 0.3)" : step.status === "running" ? "rgba(99, 102, 241, 0.4)" : "rgba(255, 255, 255, 0.05)"}`,
+                  background: step.status === "done" ? "#162338" : step.status === "running" ? "#1e293b" : "#111827",
+                  border: `1px solid ${step.status === "done" ? "rgba(16, 185, 129, 0.4)" : step.status === "running" ? "rgba(99, 102, 241, 0.6)" : "rgba(255, 255, 255, 0.12)"}`,
                   borderRadius: "14px",
-                  padding: "0.9rem 1rem",
+                  padding: "1rem 1.1rem",
                   display: "flex",
                   alignItems: "flex-start",
                   gap: "0.75rem",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
                   transition: "all 0.3s ease",
                 }}
               >
@@ -383,25 +384,25 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,
-                    background: step.status === "done" ? "#10b981" : step.status === "running" ? "rgba(99,102,241,0.3)" : "rgba(255,255,255,0.06)",
+                    background: step.status === "done" ? "#10b981" : step.status === "running" ? "#6366f1" : "rgba(255,255,255,0.1)",
                   }}
                 >
                   {step.status === "running" ? (
-                    <Loader2 size={14} color="#818cf8" style={{ animation: "spin 1s linear infinite" }} />
+                    <Loader2 size={14} color="#ffffff" style={{ animation: "spin 1s linear infinite" }} />
                   ) : step.status === "done" ? (
                     <Check size={14} color="#fff" />
                   ) : (
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#475569" }} />
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#64748b" }} />
                   )}
                 </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: step.status === "done" ? "#fff" : step.status === "running" ? "#c7d2fe" : "#94a3b8" }}>
+                  <div style={{ fontSize: "0.92rem", fontWeight: 700, color: step.status === "done" ? "#ffffff" : step.status === "running" ? "#e0e7ff" : "#cbd5e1" }}>
                     {step.label}
                   </div>
-                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: 2 }}>{step.sublabel}</div>
+                  <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginTop: 2 }}>{step.sublabel}</div>
                   {step.detail && (
-                    <div style={{ fontSize: "0.75rem", color: "#10b981", marginTop: 4, fontWeight: 600 }}>{step.detail}</div>
+                    <div style={{ fontSize: "0.78rem", color: "#34d399", marginTop: 4, fontWeight: 700 }}>{step.detail}</div>
                   )}
                 </div>
               </div>
@@ -417,10 +418,11 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
           {/* Card 1: Deposit Budget & Acquire Installs (The "Pay & Get Installs" Loop) */}
           <div
             style={{
-              background: "rgba(15, 23, 42, 0.7)",
-              border: "1px solid rgba(99, 102, 241, 0.25)",
+              background: "#131c2e",
+              border: "1px solid rgba(99, 102, 241, 0.4)",
               borderRadius: "18px",
-              padding: "1.25rem",
+              padding: "1.4rem",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
               display: "flex",
               flexDirection: "column",
             }}
@@ -498,10 +500,11 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
           {/* Card 2: Live Real-Time Telemetry Feed (Proof of Downloads & Reviews) */}
           <div
             style={{
-              background: "rgba(15, 23, 42, 0.7)",
-              border: "1px solid rgba(16, 185, 129, 0.25)",
+              background: "#131c2e",
+              border: "1px solid rgba(16, 185, 129, 0.4)",
               borderRadius: "18px",
-              padding: "1.25rem",
+              padding: "1.4rem",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
               display: "flex",
               flexDirection: "column",
             }}
@@ -513,31 +516,31 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.75rem", color: "#10b981" }}>
                 <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", animation: "pulse 2s infinite" }} />
-                <span>STREAMING</span>
+                <span style={{ fontWeight: 700 }}>STREAMING</span>
               </div>
             </div>
 
             {/* Stats Ticker */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.75rem" }}>
-              <div style={{ background: "rgba(0,0,0,0.3)", padding: "0.6rem", borderRadius: "10px", textAlign: "center" }}>
-                <span style={{ fontSize: "0.68rem", color: "#94a3b8" }}>Total Installs</span>
-                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#fff" }}>{installCount}</div>
+              <div style={{ background: "#090d16", padding: "0.7rem", borderRadius: "10px", textAlign: "center", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <span style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600 }}>Total Installs</span>
+                <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#fff" }}>{installCount}</div>
               </div>
-              <div style={{ background: "rgba(0,0,0,0.3)", padding: "0.6rem", borderRadius: "10px", textAlign: "center" }}>
-                <span style={{ fontSize: "0.68rem", color: "#94a3b8" }}>Ad Spend</span>
-                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#818cf8" }}>${spendSpent.toFixed(2)}</div>
+              <div style={{ background: "#090d16", padding: "0.7rem", borderRadius: "10px", textAlign: "center", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <span style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600 }}>Ad Spend</span>
+                <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#818cf8" }}>${spendSpent.toFixed(2)}</div>
               </div>
-              <div style={{ background: "rgba(0,0,0,0.3)", padding: "0.6rem", borderRadius: "10px", textAlign: "center" }}>
-                <span style={{ fontSize: "0.68rem", color: "#94a3b8" }}>Rating Boost</span>
-                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#f59e0b" }}>4.8 ★</div>
+              <div style={{ background: "#090d16", padding: "0.7rem", borderRadius: "10px", textAlign: "center", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <span style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600 }}>Rating Boost</span>
+                <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#f59e0b" }}>4.8 ★</div>
               </div>
             </div>
 
             {/* Live Feed List */}
             <div style={{ flex: 1, minHeight: 180, maxHeight: 180, overflowY: "auto", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
               {liveFeed.length === 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "#64748b", fontSize: "0.8rem", textAlign: "center" }}>
-                  <Radio size={24} style={{ marginBottom: 6, opacity: 0.5 }} />
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "#94a3b8", fontSize: "0.82rem", textAlign: "center" }}>
+                  <Radio size={24} style={{ marginBottom: 6, opacity: 0.6 }} />
                   <span>Click "Confirm & Start Acquisition" to stream verified installs.</span>
                 </div>
               ) : (
@@ -545,24 +548,24 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
                   <div
                     key={item.id}
                     style={{
-                      background: "rgba(255, 255, 255, 0.03)",
-                      border: "1px solid rgba(255, 255, 255, 0.06)",
+                      background: "#090d16",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
                       borderRadius: "8px",
-                      padding: "0.45rem 0.7rem",
+                      padding: "0.5rem 0.75rem",
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      fontSize: "0.75rem",
+                      fontSize: "0.78rem",
                     }}
                   >
                     <div>
                       <span style={{ marginRight: 6 }}>{item.flag}</span>
-                      <span style={{ fontWeight: 600, color: "#fff" }}>{item.city}</span>
-                      <span style={{ color: "#64748b", marginLeft: 6 }}>({item.device})</span>
+                      <span style={{ fontWeight: 700, color: "#ffffff" }}>{item.city}</span>
+                      <span style={{ color: "#94a3b8", marginLeft: 6 }}>({item.device})</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ color: "#818cf8", fontSize: "0.7rem" }}>{item.channel}</span>
-                      <span style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", padding: "0.1rem 0.35rem", borderRadius: "4px", fontWeight: 700, fontSize: "0.68rem" }}>{item.cpi}</span>
+                      <span style={{ color: "#a5b4fc", fontSize: "0.72rem", fontWeight: 600 }}>{item.channel}</span>
+                      <span style={{ background: "rgba(16,185,129,0.2)", color: "#34d399", padding: "0.15rem 0.4rem", borderRadius: "4px", fontWeight: 700, fontSize: "0.72rem" }}>{item.cpi}</span>
                     </div>
                   </div>
                 ))
@@ -573,10 +576,11 @@ p{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
           {/* Card 3: 100+ Directory Dispatch & Export Center */}
           <div
             style={{
-              background: "rgba(15, 23, 42, 0.7)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "#131c2e",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
               borderRadius: "18px",
-              padding: "1.25rem",
+              padding: "1.4rem",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
               display: "flex",
               flexDirection: "column",
             }}
