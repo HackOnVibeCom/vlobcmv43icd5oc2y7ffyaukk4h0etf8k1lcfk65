@@ -14,6 +14,7 @@ const db = vi.hoisted(() => ({
 const gemini = vi.hoisted(() => ({
   generateCopyForPlatform: vi.fn(),
   generateAllPlatformCopy: vi.fn(),
+  generatePosterCopy: vi.fn().mockResolvedValue({ primaryPosterText: "Orbit", secondaryPosterText: "Workspace" }),
   createImagePrompt: vi.fn(),
   PLATFORMS: ["appStore", "googlePlay", "twitter", "instagram", "linkedin", "productHunt"],
 }));
@@ -71,7 +72,7 @@ describe("authenticated campaign flows", () => {
 
     const result = await caller.regeneratePlatform({ campaignId: 9, platform: "linkedin" });
     expect(result.platform).toBe("linkedin");
-    expect(gemini.generateCopyForPlatform).toHaveBeenCalledWith(context, "linkedin");
+    expect(gemini.generateCopyForPlatform).toHaveBeenCalledWith(context, "linkedin", undefined);
     expect(db.setCampaignOutput).toHaveBeenCalledWith(9, result);
   });
 
@@ -128,9 +129,12 @@ describe("guest image allowance", () => {
 
 describe("Premium product configuration", () => {
   it("reads the Premium checkout price from environment configuration instead of application source", () => {
+    const prevSecret = process.env.STRIPE_SECRET_KEY;
     const previous = process.env.STRIPE_PREMIUM_PRICE_ID;
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock_secret";
     process.env.STRIPE_PREMIUM_PRICE_ID = "price_pitchforge_premium";
     expect(getPremiumPriceId()).toBe("price_pitchforge_premium");
+    process.env.STRIPE_SECRET_KEY = prevSecret;
     process.env.STRIPE_PREMIUM_PRICE_ID = previous;
   });
 });

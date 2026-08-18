@@ -55,6 +55,15 @@ For install and deploy steps, see [RUN.md](./RUN.md). This document covers **wha
 
 These are rules engines, not prompts. Auditable. Consistent. Cannot be replicated by pasting into ChatGPT.
 
+**In-App Promotion Code Integration SDK**  
+Production-ready code snippets in **iOS (Swift / SwiftUI)**, **Android (Kotlin)**, **React Native**, and **Flutter (Dart)** to directly integrate in-app viral referral sheets, smart App Store rating prompts (SKStoreReviewController / Google Play In-App Review), "What's New" release note modals, and campaign deep linking.
+
+**Live Social Banner & OpenGraph Studio (1200×630)**  
+Interactive visual banner creator with customizable gradient themes (Midnight Obsidian, Electric Cobalt, Sunset Crimson, Forest Emerald, Cyber Violet), real-time text customizer, and one-click downloadable SVG / high-res graphics.
+
+**App Store Screenshot Storyboard & Graphic Spec**  
+Sequential 5-slide visual screenshot spec (Hero Hook, Core Magic, ASO Quality, Multi-Channel, and CTA) with device mockups and one-click specs export for designers.
+
 **ASO Scoring Engine**  
 Grades every output A–F against known App Store and Play Store ranking factors: character budget compliance, keyword density, structural completeness, CTA presence. Auto-expands on the first card after generation so the score is the first thing you see.
 
@@ -67,6 +76,12 @@ Checks description depth, rating presence, developer identity, and screenshot co
 **iOS Keyword Field Packer**  
 Greedy knapsack solver that maximises keyword coverage within App Store's hard 100-character budget. Add custom keywords, watch the packer re-optimise. Coverage bar shows % of budget used.
 
+**App Store Subtitle & Tagline Matrix**  
+Generates 5 distinct high-converting angles for 30-character App Store Subtitles, Google Play taglines, and Product Hunt 60-character punchlines with live character validation gauges.
+
+**Anti-Self-Promotion & Spam Risk Scorer**  
+Deterministic scoring engine analyzing copy authenticity against promotional buzzwords, technical depth, and feedback solicitation for Hacker News and Reddit community guidelines.
+
 **"Why This Copy" Reasoning Panel**  
 Shows exactly which extracted signals (category, rating, keyword frequency, screenshot count) shaped each output. Uses the same scoring engine as the ASO grade — explanation and score never contradict each other.
 
@@ -75,18 +90,25 @@ Shows exactly which extracted signals (category, rating, keyword frequency, scre
 **Competitor Positioning Map**  
 Names 3–4 plausible category-comparable apps with a one-line factual contrast for each, plus a positioning summary. Click-to-generate, clearly labeled as illustrative rather than verified live market data.
 
+**Interactive Social & Store Feed Mockups**  
+Live pixel-perfect visual previews of generated copy formatted natively for Twitter/X, LinkedIn, Instagram, Apple App Store, Google Play Store, and Product Hunt.
+
 ---
 
-## Publishing & sharing
+## Publishing, scheduling & sharing
 
 **Per output card — scoped to that card's own text only:**
 
+- **Live Feed Mockup** — preview the post in its realistic native social or store feed format with 1 click
 - **Copy button** — copies only that platform's generated text
 - **Upload to Platform** — Twitter/X and LinkedIn only (the only two with a real public compose intent):
   - X opens fully pre-filled with text and source link
   - LinkedIn's official endpoint accepts a URL only (they deprecated text prefill) — button copies text to clipboard first, then opens LinkedIn's post box with the link. Paste, then post.
   - Instagram, App Store Connect, Play Console, Product Hunt have no public compose intent — those cards show **Copy only**, with a toast confirming where to paste
-- **Discord auto-publish** — connect your own Discord channel webhook (no OAuth, paste from Channel Settings → Integrations), post any platform's copy with one click, delivery status recorded. Signed-in users only.
+- **Multi-Channel Auto-Publish Hub** — connect Discord, Slack incoming webhooks, Telegram bot/channel, or Custom Webhooks (Zapier/Make.com). Includes 1-click batch dispatch across all connected destinations.
+- **Launch Day T-Minus Scheduler & Calendar (.ics) Export** — complete day-by-day and hour-by-hour launch roadmap from T-7 days to Launch Day with downloadable RFC 5545 `.ics` calendar events for Apple/Google/Outlook Calendar.
+- **Press, Newsletter & Creator Pitch Drafter** — tailored email pitches with one-click `mailto:` composer and clipboard copy.
+- **Hacker News (Show HN) & Reddit Launch Studio** — authentic community post drafter with built-in Anti-Spam scoring.
 - **One-click share links** — WhatsApp, Telegram, Email, Facebook, Reddit — each opens that platform's native share dialog pre-filled where allowed
 - **Copy all platforms** — one click copies all 6 finished outputs, formatted, as a single doc
 - **Export markdown** — full 6-platform campaign as `.md`
@@ -106,11 +128,11 @@ Paste a store review + star rating → developer response draft, tone-matched (e
 
 ## Guest experience
 
-Every feature above — generation in any of 7 languages, per-platform copy/upload, all export formats, all quality engines, changelog and review tools — works **fully without an account**. No feature is gated behind sign-in except:
+Every feature above — generation in any of 7 languages, per-platform copy/upload, feed mockups, launch scheduler with `.ics` export, press drafter, community launch studio, subtitle matrix, all export formats, all quality engines, changelog and review tools — works **fully without an account**. No feature is gated behind sign-in except:
 
 - Saving campaigns to persistent history
 - A/B variant generation (needs a saved campaign)
-- Discord auto-publish
+- Webhook auto-publish channel saving (guests can still run instant live simulations and URL tests!)
 - Campaign visuals beyond 10/7-day guest allowance
 
 A guest summary card appears after generation with real numbers from that campaign — platform count, ASO grade, checklist pass count — with a sign-in CTA. Informational, not a paywall.

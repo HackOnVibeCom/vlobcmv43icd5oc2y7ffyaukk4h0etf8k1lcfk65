@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Clipboard,
   Download,
+  Eye,
   FileText,
   HelpCircle,
   ImagePlus,
@@ -41,8 +42,8 @@ import KeywordPacker from "./KeywordPacker";
 import ABVariantPanel from "./ABVariantPanel";
 import ToneTogglePanel from "./ToneTogglePanel";
 import GuestSummaryCard from "./GuestSummaryCard";
-import ChangelogGenerator from "./ChangelogGenerator";
-import ReviewResponsePanel from "./ReviewResponsePanel";
+import FeedMockupModal from "./FeedMockupModal";
+import LaunchToolkitHub from "./LaunchToolkitHub";
 
 type InputMode = "url" | "brief" | "manual";
 type Platform = "appStore" | "googlePlay" | "twitter" | "instagram" | "linkedin" | "productHunt";
@@ -150,6 +151,8 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
   const [expandedPublish, setExpandedPublish] = useState<Platform | null>(null);
   const [expandedAB, setExpandedAB] = useState<Platform | null>(null);
   const [expandedTone, setExpandedTone] = useState<Platform | null>(null);
+  const [showMockupModal, setShowMockupModal] = useState(false);
+  const [mockupPlatform, setMockupPlatform] = useState<Platform>("twitter");
   const prepare = trpc.generator.prepare.useMutation();
   const generatePlatform = trpc.generator.generatePlatform.useMutation();
   const saveCampaign = trpc.generator.saveCampaign.useMutation();
@@ -398,6 +401,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
             <h3>{context ? context.name : "Six outlets, one source of truth."}</h3>
           </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {completedOutputs.length > 0 && <Button variant="outline" onClick={() => { setMockupPlatform(completedOutputs[0].platform); setShowMockupModal(true); }}><Eye size={15} /> Feed Mockups</Button>}
             {completedOutputs.length === 6 && <Button variant="outline" onClick={() => downloadCampaign(completedOutputs, context?.name ?? "pitchforge-campaign")}><Download size={15} /> Export markdown</Button>}
             {completedOutputs.length === 6 && <Button variant="outline" onClick={() => downloadCampaignPdf(completedOutputs, context?.name ?? "pitchforge-campaign").catch(() => toast.error("PDF export failed."))}><FileText size={15} /> Export PDF</Button>}
             {campaignId && isSignedIn && <MicrositeButton campaignId={campaignId} />}
@@ -439,15 +443,14 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
                       <div>
                         <button type="button" onClick={() => handleRegenerate(meta.id)} aria-label={`Regenerate ${meta.name}`}><RefreshCw size={14} /></button>
                         <button type="button" onClick={() => copyOutput(output)} aria-label={`Copy ${meta.name}`}><Clipboard size={14} /></button>
+                        <button type="button" onClick={() => { setMockupPlatform(meta.id); setShowMockupModal(true); }} aria-label="Feed Preview" title="Feed Preview"><Eye size={14} /></button>
                         <button type="button" onClick={() => setExpandedScore(expandedScore === meta.id ? null : meta.id)} aria-label="Quality score" title="Quality score"><BarChart2 size={14} /></button>
                         <button type="button" onClick={() => setExpandedReason(expandedReason === meta.id ? null : meta.id)} aria-label="Why this copy" title="Why this copy"><HelpCircle size={14} /></button>
                         {campaignId && (
                           <button type="button" onClick={() => setExpandedAB(expandedAB === meta.id ? null : meta.id)} aria-label="A/B variants" title="A/B auto-pick"><Shuffle size={14} /></button>
                         )}
                         <button type="button" onClick={() => setExpandedTone(expandedTone === meta.id ? null : meta.id)} aria-label="Tone toggle" title="Change tone"><Sliders size={14} /></button>
-                        {campaignId && isSignedIn && (
-                          <button type="button" onClick={() => setExpandedPublish(expandedPublish === meta.id ? null : meta.id)} aria-label="Publish" title="Auto-publish"><ChevronDown size={14} /></button>
-                        )}
+                        <button type="button" onClick={() => setExpandedPublish(expandedPublish === meta.id ? null : meta.id)} aria-label="Publish" title="Auto-publish"><ChevronDown size={14} /></button>
                       </div>
                     </div>
                     {expandedScore === meta.id && context && (
@@ -456,8 +459,8 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
                     {expandedReason === meta.id && context && (
                       <ReasoningPanel content={output.content} platform={meta.id} context={context} />
                     )}
-                    {expandedPublish === meta.id && campaignId && (
-                      <PublishPanel campaignId={campaignId} platform={meta.id} />
+                    {expandedPublish === meta.id && (
+                      <PublishPanel campaignId={campaignId ?? undefined} platform={meta.id} content={output.content} appName={context?.name} />
                     )}
                     {expandedAB === meta.id && campaignId && (
                       <ABVariantPanel
@@ -488,12 +491,7 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
             checklistPassed={guestChecklist.data?.passCount}
           />
         )}
-        {context && <LaunchChecklist context={context} />}
-        {context && <CategoryBenchmark context={context} />}
-        {context && <CompetitorMap context={context} />}
-        {context && <KeywordPacker context={context} />}
-        {context && <ChangelogGenerator context={context} />}
-        {context && <ReviewResponsePanel context={context} />}
+        {context && <LaunchToolkitHub context={context} />}
 
         {context && (
           <aside className="image-bench">
@@ -535,6 +533,14 @@ export default function GeneratorStudio({ embedded = false, preset }: { embedded
           </aside>
         )}
       </div>
+      {/* Feed Mockup Studio Modal */}
+      <FeedMockupModal
+        isOpen={showMockupModal}
+        onClose={() => setShowMockupModal(false)}
+        initialPlatform={mockupPlatform}
+        outputs={outputs}
+        context={context ?? undefined}
+      />
     </section>
   );
 }

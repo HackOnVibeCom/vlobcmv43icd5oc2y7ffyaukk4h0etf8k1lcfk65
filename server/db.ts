@@ -279,7 +279,12 @@ export async function listPublishConnections(userId: number) {
   return db.select().from(publishConnections).where(and(eq(publishConnections.userId, userId), eq(publishConnections.isActive, "true")));
 }
 
-export async function createPublishConnection(input: { userId: number; kind: "discord"; label: string; webhookUrl: string }) {
+export async function createPublishConnection(input: {
+  userId: number;
+  kind: "discord" | "slack" | "telegram" | "webhook";
+  label: string;
+  webhookUrl: string;
+}) {
   const db = await getDb();
   if (!db) throw new Error("Database is unavailable. Try again shortly.");
   const result = await db.insert(publishConnections).values(input);

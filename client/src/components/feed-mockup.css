@@ -1,0 +1,601 @@
+/* Feed Mockup Studio Styles */
+
+.mockup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 25, 0.78);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  animation: mockupFadeIn 0.2s ease-out;
+}
+
+@keyframes mockupFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.mockup-modal {
+  width: 100%;
+  max-width: 840px;
+  max-height: 90vh;
+  background: #0d121f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+  color: #f1f5f9;
+}
+
+.mockup-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mockup-modal__header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mockup-modal__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.mockup-modal__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.mockup-modal__close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.mockup-modal__close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Tabs Bar */
+.mockup-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-x: auto;
+}
+
+.mockup-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #94a3b8;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.mockup-tab-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mockup-tab-btn.is-active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.mockup-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: radial-gradient(circle at top, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+}
+
+.mockup-preview-wrap {
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Platform-specific Feed Cards */
+
+/* 1. Twitter / X Card */
+.mockup-card-twitter {
+  background: #000000;
+  border: 1px solid #2f3336;
+  border-radius: 16px;
+  padding: 1.25rem;
+  color: #e7e9ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.mockup-twitter-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.mockup-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.05rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.mockup-twitter-user {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.mockup-twitter-names {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.mockup-verified {
+  color: #1d9bf0;
+  display: inline-flex;
+}
+
+.mockup-twitter-handle {
+  color: #71767b;
+  font-size: 0.9rem;
+}
+
+.mockup-twitter-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 1rem;
+}
+
+.mockup-twitter-media {
+  background: #16181c;
+  border: 1px solid #2f3336;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #71767b;
+  margin-bottom: 1rem;
+}
+
+.mockup-twitter-metrics {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #2f3336;
+  padding-top: 0.75rem;
+  color: #71767b;
+  font-size: 0.85rem;
+}
+
+.mockup-twitter-metrics span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* 2. LinkedIn Card */
+.mockup-card-linkedin {
+  background: #1b1f23;
+  border: 1px solid #2d333b;
+  border-radius: 12px;
+  padding: 1.25rem;
+  color: #e6edf3;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.mockup-linkedin-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.mockup-linkedin-author h5 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f0f6fc;
+}
+
+.mockup-linkedin-author p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #8b949e;
+}
+
+.mockup-linkedin-body {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 1rem;
+}
+
+.mockup-linkedin-footer {
+  border-top: 1px solid #30363d;
+  padding-top: 0.75rem;
+  display: flex;
+  justify-content: space-around;
+  color: #8b949e;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.mockup-linkedin-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: default;
+}
+
+/* 3. Instagram Card */
+.mockup-card-instagram {
+  background: #000;
+  border: 1px solid #262626;
+  border-radius: 16px;
+  overflow: hidden;
+  color: #fafafa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.mockup-instagram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+}
+
+.mockup-instagram-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.mockup-instagram-profile .mockup-avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 0.85rem;
+}
+
+.mockup-instagram-image-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #e0e7ff;
+  border-top: 1px solid #262626;
+  border-bottom: 1px solid #262626;
+  padding: 2rem;
+  text-align: center;
+}
+
+.mockup-instagram-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem 0.5rem;
+}
+
+.mockup-instagram-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #f5f5f5;
+}
+
+.mockup-instagram-caption {
+  padding: 0 1rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* 4. App Store Card */
+.mockup-card-appstore {
+  background: #1c1c1e;
+  border: 1px solid #2c2c2e;
+  border-radius: 20px;
+  padding: 1.25rem;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Helvetica, Arial, sans-serif;
+}
+
+.mockup-appstore-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.mockup-app-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+}
+
+.mockup-appstore-meta {
+  flex: 1;
+}
+
+.mockup-appstore-meta h4 {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.mockup-appstore-meta p {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.85rem;
+  color: #8e8e93;
+}
+
+.mockup-appstore-btn {
+  background: #0a84ff;
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.35rem 1.2rem;
+  border-radius: 9999px;
+  cursor: default;
+}
+
+.mockup-appstore-promo-box {
+  background: #2c2c2e;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 0.75rem;
+}
+
+.mockup-appstore-promo-box h6 {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #0a84ff;
+  letter-spacing: 0.05em;
+}
+
+.mockup-appstore-promo-box p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #e5e5ea;
+}
+
+/* 5. Google Play Store Card */
+.mockup-card-playstore {
+  background: #202124;
+  border: 1px solid #3c4043;
+  border-radius: 16px;
+  padding: 1.25rem;
+  color: #e8eaed;
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+}
+
+.mockup-playstore-head {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mockup-playstore-info {
+  flex: 1;
+}
+
+.mockup-playstore-info h4 {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.mockup-playstore-info p {
+  margin: 0 0 0.5rem 0;
+  color: #01875f;
+  font-weight: 500;
+  font-size: 0.88rem;
+}
+
+.mockup-playstore-chips {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: #9aa0a6;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #3c4043;
+  padding-top: 0.75rem;
+}
+
+.mockup-playstore-desc-box {
+  background: #292a2d;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 0.85rem;
+}
+
+.mockup-playstore-desc-box h6 {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.82rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.mockup-playstore-desc-box p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #bdc1c6;
+}
+
+/* 6. Product Hunt Card */
+.mockup-card-producthunt {
+  background: #1e1e24;
+  border: 1px solid #33333e;
+  border-radius: 16px;
+  padding: 1.25rem;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.mockup-ph-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.mockup-ph-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ff6154;
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.mockup-ph-upvote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 97, 84, 0.12);
+  border: 1px solid rgba(255, 97, 84, 0.3);
+  color: #ff6154;
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.mockup-ph-comment-box {
+  background: #141418;
+  border: 1px solid #2a2a35;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.mockup-ph-author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.mockup-ph-maker-tag {
+  background: #333342;
+  color: #ff6154;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.mockup-ph-comment-body {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: #d1d5db;
+}
+
+/* Modal Bottom Actions */
+.mockup-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mockup-footer-info {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.mockup-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}

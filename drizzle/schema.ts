@@ -122,7 +122,7 @@ export const publishConnections = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey(),
     userId: int("userId").notNull(),
-    kind: mysqlEnum("kind", ["discord"]).notNull(),
+    kind: mysqlEnum("kind", ["discord", "slack", "telegram", "webhook"]).notNull(),
     label: varchar("label", { length: 120 }).notNull(),
     webhookUrl: text("webhookUrl").notNull(),
     isActive: mysqlEnum("isActive", ["true", "false"]).default("true").notNull(),
