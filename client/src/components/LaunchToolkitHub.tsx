@@ -1,24 +1,25 @@
 import { useState } from "react";
 import {
-  Award,
-  BarChart2,
+  Bell,
+  CalendarDays,
   Calendar,
-  CheckCircle2,
   Code2,
   DollarSign,
-  FileText,
+  Film,
   Flame,
+  FlaskConical,
+  Gift,
   Globe2,
   ImageIcon,
-  Layers,
-  LayoutGrid,
-  MessageSquare,
+  Languages,
+  Link2,
+  Mail,
   Newspaper,
   QrCode,
   RefreshCw,
-  Search,
+  Rocket,
+  Shield,
   Sparkles,
-  Tag,
   Target,
   TrendingUp,
   Trophy,
@@ -41,19 +42,33 @@ import AppStoreBadgeStudio from "./AppStoreBadgeStudio";
 import PaidCampaignStudio from "./PaidCampaignStudio";
 import ProductHuntPlaybook from "./ProductHuntPlaybook";
 import PsychologicalTriggerAnalyzer from "./PsychologicalTriggerAnalyzer";
+import LandingPageGenerator from "./LandingPageGenerator";
+import UTMCampaignBuilder from "./UTMCampaignBuilder";
+import LocalizationEngine from "./LocalizationEngine";
+import ABCopySimulator from "./ABCopySimulator";
+import EmailDripCampaign from "./EmailDripCampaign";
+import PushNotificationCopy from "./PushNotificationCopy";
+import VideoScriptGenerator from "./VideoScriptGenerator";
+import ContentCalendar from "./ContentCalendar";
+import PrivacyPolicyGenerator from "./PrivacyPolicyGenerator";
+import ReferralCodeGenerator from "./ReferralCodeGenerator";
+import OneClickLaunchPipeline from "./OneClickLaunchPipeline";
 import "./launch-tools.css";
 
 type HubTab =
+  | "pipeline"
+  | "landing"
   | "sdk"
   | "visuals"
   | "storefront"
   | "paid_ads"
   | "product_hunt"
-  | "roadmap"
-  | "press"
+  | "outreach"
+  | "content"
   | "community"
   | "competitors"
-  | "lifecycle";
+  | "lifecycle"
+  | "legal";
 
 type CampaignContext = {
   name: string;
@@ -67,20 +82,23 @@ type CampaignContext = {
 };
 
 const TABS: Array<{ id: HubTab; label: string; icon: any; countBadge?: string }> = [
-  { id: "sdk", label: "In-App Code SDK", icon: Code2, countBadge: "Swift / Kotlin / RN" },
-  { id: "visuals", label: "Banners, QR & Screenshots", icon: ImageIcon, countBadge: "SVG & PNG" },
-  { id: "storefront", label: "Storefront & ASO", icon: Target, countBadge: "5 Engines" },
-  { id: "paid_ads", label: "Paid Search (ASA / Google)", icon: TrendingUp, countBadge: "Keywords & Copy" },
-  { id: "product_hunt", label: "Product Hunt Playbook", icon: Trophy, countBadge: "Velocity Calc" },
-  { id: "roadmap", label: "Launch Roadmap", icon: Calendar, countBadge: ".ics Export" },
-  { id: "press", label: "PR & Newsletters", icon: Newspaper, countBadge: "3 Pitches" },
+  { id: "pipeline", label: "🚀 1-Click Launch & Telemetry", icon: Rocket, countBadge: "Autonomous" },
+  { id: "landing", label: "Landing Page & UTMs", icon: Globe2, countBadge: "HTML + 8 Links" },
+  { id: "sdk", label: "Code SDK & Referrals", icon: Code2, countBadge: "Swift / Kotlin / RN / Dart" },
+  { id: "visuals", label: "Banners, QR & Storyboard", icon: ImageIcon, countBadge: "SVG & PNG" },
+  { id: "storefront", label: "ASO & A/B Copy Testing", icon: Target, countBadge: "6 Engines" },
+  { id: "paid_ads", label: "Paid Ads (ASA / Google)", icon: TrendingUp, countBadge: "Keywords" },
+  { id: "product_hunt", label: "Product Hunt Playbook", icon: Trophy, countBadge: "Velocity" },
+  { id: "outreach", label: "Email Drip & Push", icon: Mail, countBadge: "Drip + Push" },
+  { id: "content", label: "Content Calendar & Video", icon: Film, countBadge: "7-Day + 30s Script" },
   { id: "community", label: "Show HN & Reddit", icon: Flame, countBadge: "Anti-Spam" },
-  { id: "competitors", label: "Competitor Map", icon: Globe2, countBadge: "AI Contrast" },
+  { id: "competitors", label: "Competitors & Locales", icon: Languages, countBadge: "6 Languages" },
   { id: "lifecycle", label: "Changelogs & Reviews", icon: RefreshCw, countBadge: "Retention" },
+  { id: "legal", label: "Privacy Policy & Terms", icon: Shield, countBadge: "App Store Req" },
 ];
 
 export default function LaunchToolkitHub({ context }: { context: CampaignContext }) {
-  const [activeTab, setActiveTab] = useState<HubTab>("sdk");
+  const [activeTab, setActiveTab] = useState<HubTab>("pipeline");
 
   return (
     <section className="launch-toolkit-hub" aria-label="Mobile App Promotion Operating System" style={{ marginTop: "2rem" }}>
@@ -96,13 +114,25 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span style={{ fontSize: "0.8rem", color: "#10b981", fontWeight: 600 }}>
-              ● 100% Verifiable & Production Ready
+              ● 20+ Integrated Engines · 100% Verifiable
             </span>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="mockup-tabs" style={{ background: "rgba(15, 23, 42, 0.6)", borderRadius: "12px", padding: "0.4rem", marginTop: "1rem", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
+        <div
+          className="mockup-tabs"
+          style={{
+            background: "rgba(15, 23, 42, 0.6)",
+            borderRadius: "12px",
+            padding: "0.4rem",
+            marginTop: "1rem",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            display: "flex",
+            overflowX: "auto",
+            gap: "0.3rem",
+          }}
+        >
           {TABS.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -113,25 +143,31 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
                 className={`mockup-tab-btn ${isActive ? "is-active" : ""}`}
                 style={{
                   padding: "0.5rem 0.85rem",
-                  fontSize: "0.82rem",
-                  fontWeight: isActive ? 600 : 500,
+                  fontSize: "0.8rem",
+                  fontWeight: isActive ? 700 : 500,
                   background: isActive ? "rgba(99, 102, 241, 0.25)" : "transparent",
                   borderColor: isActive ? "rgba(99, 102, 241, 0.4)" : "transparent",
                   color: isActive ? "#fff" : "#94a3b8",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
                 }}
                 onClick={() => setActiveTab(tab.id)}
               >
                 <Icon size={14} style={{ color: isActive ? "#818cf8" : "inherit" }} />
                 <span>{tab.label}</span>
                 {tab.countBadge && (
-                  <span style={{
-                    fontSize: "0.68rem",
-                    padding: "0.15rem 0.45rem",
-                    borderRadius: "9999px",
-                    background: isActive ? "rgba(99, 102, 241, 0.3)" : "rgba(255, 255, 255, 0.06)",
-                    color: isActive ? "#c7d2fe" : "#64748b",
-                    marginLeft: 4,
-                  }}>
+                  <span
+                    style={{
+                      fontSize: "0.68rem",
+                      padding: "0.15rem 0.45rem",
+                      borderRadius: "9999px",
+                      background: isActive ? "rgba(99, 102, 241, 0.3)" : "rgba(255, 255, 255, 0.06)",
+                      color: isActive ? "#c7d2fe" : "#64748b",
+                      marginLeft: 2,
+                    }}
+                  >
                     {tab.countBadge}
                   </span>
                 )}
@@ -143,9 +179,23 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
 
       {/* Tab Contents */}
       <div className="launch-toolkit-hub__content">
+        {activeTab === "pipeline" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <OneClickLaunchPipeline />
+          </div>
+        )}
+
+        {activeTab === "landing" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <LandingPageGenerator context={context} />
+            <UTMCampaignBuilder context={context} />
+          </div>
+        )}
+
         {activeTab === "sdk" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <InAppPromotionSDKPanel context={context} />
+            <ReferralCodeGenerator context={context} />
           </div>
         )}
 
@@ -160,6 +210,7 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
         {activeTab === "storefront" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <PsychologicalTriggerAnalyzer context={context} />
+            <ABCopySimulator context={context} />
             <SubtitleMatrixPanel context={context} />
             <LaunchChecklist context={context} />
             <CategoryBenchmark context={context} />
@@ -179,15 +230,19 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
           </div>
         )}
 
-        {activeTab === "roadmap" && (
+        {activeTab === "outreach" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <EmailDripCampaign context={context} />
+            <PushNotificationCopy context={context} />
+            <PressPitchPanel context={context} />
             <LaunchScheduler appName={context.name} />
           </div>
         )}
 
-        {activeTab === "press" && (
+        {activeTab === "content" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <PressPitchPanel context={context} />
+            <ContentCalendar context={context} />
+            <VideoScriptGenerator context={context} />
           </div>
         )}
 
@@ -200,6 +255,7 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
         {activeTab === "competitors" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <CompetitorMap context={context} />
+            <LocalizationEngine context={context} />
           </div>
         )}
 
@@ -207,6 +263,12 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <ChangelogGenerator context={context} />
             <ReviewResponsePanel context={context} />
+          </div>
+        )}
+
+        {activeTab === "legal" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <PrivacyPolicyGenerator context={context} />
           </div>
         )}
       </div>
