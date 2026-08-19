@@ -93,53 +93,55 @@ function generateDeterministicFallbackCopy(context: SourceContext, platform: Pla
 
 export async function generateCopyForPlatform(context: SourceContext, platform: Platform, language = "English"): Promise<GeneratedCopy> {
   const details = PLATFORM_DETAILS[platform];
-  const { apiKey, baseUrl, models } = getGeminiConfig();
+  const { allKeys, baseUrl, models } = getGeminiConfig();
   const failures: string[] = [];
 
-  for (const model of models) {
-    try {
-      console.log(`[gemini] starting fetch: model=${model} platform=${platform} baseUrl=${baseUrl}`);
-      const response = await fetch(`${baseUrl}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: promptForPlatform(context, platform, language) }] }],
-          generationConfig: {
-            temperature: 0.7,
-            responseMimeType: "application/json",
-            responseJsonSchema: outputSchema,
-          },
-        }),
-        signal: AbortSignal.timeout(18_000),
-      });
+  for (const currentKey of allKeys) {
+    for (const model of models) {
+      try {
+        console.log(`[gemini] requesting: model=${model} platform=${platform} baseUrl=${baseUrl}`);
+        const response = await fetch(`${baseUrl}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(currentKey)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: promptForPlatform(context, platform, language) }] }],
+            generationConfig: {
+              temperature: 0.7,
+              responseMimeType: "application/json",
+              responseJsonSchema: outputSchema,
+            },
+          }),
+          signal: AbortSignal.timeout(16_000),
+        });
 
-      if (!response.ok) {
-        console.warn(`[gemini] ${model} returned ${response.status}`);
-        failures.push(`${model}:${response.status}`);
-        continue;
+        if (!response.ok) {
+          console.warn(`[gemini] ${model} returned ${response.status}`);
+          failures.push(`${model}:${response.status}`);
+          continue;
+        }
+
+        const rawText = responseText(await response.json());
+        if (!rawText) {
+          failures.push(`${model}:empty`);
+          continue;
+        }
+
+        const parsed = JSON.parse(rawText) as { content?: unknown };
+        const content = typeof parsed.content === "string" ? parsed.content.trim() : "";
+        if (!content) {
+          failures.push(`${model}:invalid-json`);
+          continue;
+        }
+
+        return {
+          platform,
+          content,
+          characterCount: content.length,
+          characterLimit: details.limit,
+        };
+      } catch (error) {
+        failures.push(`${model}:${error instanceof Error ? error.name : "request-error"}`);
       }
-
-      const rawText = responseText(await response.json());
-      if (!rawText) {
-        failures.push(`${model}:empty`);
-        continue;
-      }
-
-      const parsed = JSON.parse(rawText) as { content?: unknown };
-      const content = typeof parsed.content === "string" ? parsed.content.trim() : "";
-      if (!content) {
-        failures.push(`${model}:invalid-json`);
-        continue;
-      }
-
-      return {
-        platform,
-        content,
-        characterCount: content.length,
-        characterLimit: details.limit,
-      };
-    } catch (error) {
-      failures.push(`${model}:${error instanceof Error ? error.name : "request-error"}`);
     }
   }
 
@@ -220,4 +222,10 @@ export async function generatePosterCopy(context: SourceContext): Promise<Genera
   }
 
   return { headline: context.name, subtext: context.description?.slice(0, 50) };
+}
+
+export function createImagePrompt(context: SourceContext): string {
+  const category = context.category || "Mobile Application";
+  const desc = context.description || "A modern, intuitive mobile application";
+  return `A high quality, professional promotional marketing visual for the app "${context.name}" (${category}). Context: ${desc.slice(0, 200)}. Aesthetic: clean, premium, modern UI graphics, vibrant lighting, minimal composition.`;
 }
