@@ -140,9 +140,9 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
             onClick={() => handlePhaseChange("prelaunch")}
             style={{
               padding: "0.9rem 1.25rem",
-              borderRadius: "14px",
-              background: phase === "prelaunch" ? "#1e293b" : "#0f172a",
-              border: `1.5px solid ${phase === "prelaunch" ? "#6366f1" : "rgba(255,255,255,0.12)"}`,
+              borderRadius: "12px",
+              background: phase === "prelaunch" ? "#22201d" : "#1a1815",
+              border: `1.5px solid ${phase === "prelaunch" ? "#d8d1c5" : "rgba(255,255,255,0.08)"}`,
               color: "#ffffff",
               textAlign: "left",
               cursor: "pointer",
@@ -153,12 +153,12 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
               transition: "all 0.2s ease",
             }}
           >
-            <div style={{ width: 36, height: 36, borderRadius: "10px", background: phase === "prelaunch" ? "#6366f1" : "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <div style={{ width: 36, height: 36, borderRadius: "8px", background: phase === "prelaunch" ? "#dc143c" : "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <Rocket size={18} color="#fff" />
             </div>
             <div>
               <div style={{ fontSize: "0.95rem", fontWeight: 800 }}>Phase 1: Pre-Launch & Acquisition</div>
-              <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>Drive initial downloads, directory indexing & launch ads</div>
+              <div style={{ fontSize: "0.72rem", color: "#a8a29e" }}>Drive initial downloads, directory indexing & launch ads</div>
             </div>
           </button>
 
@@ -167,9 +167,9 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
             onClick={() => handlePhaseChange("postlaunch")}
             style={{
               padding: "0.9rem 1.25rem",
-              borderRadius: "14px",
-              background: phase === "postlaunch" ? "#1e293b" : "#0f172a",
-              border: `1.5px solid ${phase === "postlaunch" ? "#38bdf8" : "rgba(255,255,255,0.12)"}`,
+              borderRadius: "12px",
+              background: phase === "postlaunch" ? "#22201d" : "#1a1815",
+              border: `1.5px solid ${phase === "postlaunch" ? "#d8d1c5" : "rgba(255,255,255,0.08)"}`,
               color: "#ffffff",
               textAlign: "left",
               cursor: "pointer",
@@ -180,12 +180,12 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
               transition: "all 0.2s ease",
             }}
           >
-            <div style={{ width: 36, height: 36, borderRadius: "10px", background: phase === "postlaunch" ? "#38bdf8" : "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <div style={{ width: 36, height: 36, borderRadius: "8px", background: phase === "postlaunch" ? "#2454d7" : "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <Code2 size={18} color="#fff" />
             </div>
             <div>
               <div style={{ fontSize: "0.95rem", fontWeight: 800 }}>Phase 2: In-App Virality & Retention</div>
-              <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>Native SDK integration, viral share sheets & review boosts</div>
+              <div style={{ fontSize: "0.72rem", color: "#a8a29e" }}>Native SDK integration, viral share sheets & review boosts</div>
             </div>
           </button>
         </div>
@@ -194,11 +194,11 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
         <div
           className="mockup-tabs"
           style={{
-            background: "#090d16",
-            borderRadius: "12px",
-            padding: "0.4rem",
+            background: "#1c1917",
+            borderRadius: "10px",
+            padding: "0.35rem",
             marginTop: "0.5rem",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
             display: "flex",
             overflowX: "auto",
             gap: "0.3rem",
@@ -216,20 +216,20 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
                   padding: "0.5rem 0.85rem",
                   fontSize: "0.8rem",
                   fontWeight: isActive ? 700 : 500,
-                  background: isActive ? (phase === "prelaunch" ? "#4f46e5" : "#0284c7") : "transparent",
+                  background: isActive ? (phase === "prelaunch" ? "#dc143c" : "#2454d7") : "transparent",
                   borderColor: "transparent",
-                  color: isActive ? "#ffffff" : "#94a3b8",
+                  color: isActive ? "#ffffff" : "#a8a29e",
                   whiteSpace: "nowrap",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
-                  borderRadius: "8px",
+                  borderRadius: "6px",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
                 }}
                 onClick={() => setActiveTab(tab.id)}
               >
-                <Icon size={14} style={{ color: isActive ? "#ffffff" : "#94a3b8" }} />
+                <Icon size={14} style={{ color: isActive ? "#ffffff" : "#a8a29e" }} />
                 <span>{tab.label}</span>
                 {tab.countBadge && (
                   <span

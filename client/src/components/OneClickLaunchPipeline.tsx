@@ -199,38 +199,38 @@ p{color:#cbd5e1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
       {/* 🌟 Master Header */}
       <div
         style={{
-          background: "linear-gradient(135deg, #131b2e 0%, #0d1527 50%, #0a1120 100%)",
-          border: "1px solid rgba(99, 102, 241, 0.45)",
-          borderRadius: "24px",
-          padding: "2.2rem",
-          boxShadow: "0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15)",
+          background: "#1c1917",
+          border: "1px solid rgba(255, 255, 255, 0.12)",
+          borderRadius: "18px",
+          padding: "2rem",
+          boxShadow: "0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
           position: "relative",
           overflow: "hidden",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem", marginBottom: "1.5rem" }}>
           <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "0.3rem 0.8rem", borderRadius: "9999px", background: "rgba(99, 102, 241, 0.15)", border: "1px solid rgba(99, 102, 241, 0.3)", color: "#818cf8", fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.75rem" }}>
-              <Zap size={13} color="#818cf8" /> Autonomous Mobile Launch Pipeline
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "0.3rem 0.8rem", borderRadius: "9999px", background: "rgba(220, 20, 60, 0.12)", border: "1px solid rgba(220, 20, 60, 0.3)", color: "#f87171", fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.75rem" }}>
+              <Zap size={13} color="#f87171" /> Autonomous Mobile Launch Pipeline
             </div>
             <h2 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#ffffff", margin: "0 0 0.5rem 0", lineHeight: 1.2 }}>
               Paste Store Link ➔ Execute Full Campaign
             </h2>
-            <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0, maxWidth: "600px", lineHeight: 1.5 }}>
+            <p style={{ color: "#a8a29e", fontSize: "0.95rem", margin: 0, maxWidth: "600px", lineHeight: 1.5 }}>
               Scrapes your store listing, generates multi-channel launch copy, compiles an HTML microsite, and models Apple Search Ads acquisition with zero manual effort.
             </p>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "rgba(0,0,0,0.4)", padding: "0.5rem 0.9rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.08)" }}>
-            <Sparkles size={16} color="#10b981" />
-            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#10b981" }}>100% Deterministic & Verifiable</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "rgba(0,0,0,0.4)", padding: "0.5rem 0.9rem", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <Sparkles size={16} color="#4ade80" />
+            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#4ade80" }}>100% Deterministic & Verifiable</span>
           </div>
         </div>
 
         {/* Input Bar */}
-        <div style={{ display: "flex", gap: "0.75rem", background: "rgba(0,0,0,0.5)", padding: "0.5rem", borderRadius: "16px", border: "1px solid rgba(255,255,255,0.12)", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "0.75rem", background: "#151311", padding: "0.5rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", flexWrap: "wrap" }}>
           <div style={{ flex: 1, minWidth: 280, display: "flex", alignItems: "center", gap: "0.75rem", paddingLeft: "0.75rem" }}>
-            <Globe2 size={20} color="#818cf8" />
+            <Globe2 size={20} color="#a8a29e" />
             <input
               type="url"
               value={storeUrl}
@@ -252,13 +252,13 @@ p{color:#cbd5e1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
             onClick={handleRunPipeline}
             disabled={isProcessing}
             style={{
-              background: isProcessing ? "rgba(99, 102, 241, 0.4)" : "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+              background: isProcessing ? "#292524" : "var(--signal, #dc143c)",
               color: "#ffffff",
               fontWeight: 700,
               fontSize: "0.95rem",
               padding: "0.85rem 1.75rem",
-              borderRadius: "12px",
-              boxShadow: "0 10px 25px rgba(99, 102, 241, 0.4)",
+              borderRadius: "10px",
+              boxShadow: "0 8px 20px rgba(220, 20, 60, 0.3)",
               border: "none",
               display: "flex",
               alignItems: "center",

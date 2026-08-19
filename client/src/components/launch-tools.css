@@ -1,12 +1,12 @@
-/* Launch Suite Tools CSS — Enhanced High-Contrast Light & Dark Compatible */
+/* Launch Suite Tools CSS — Harmonized with Editorial Obsidian/Paper Theme */
 
 .launch-toolkit-hub {
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  padding: 1.5rem;
-  color: #f8fafc;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  background: #151311;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 1.75rem;
+  color: #f7f1e7;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
 }
 
 .launch-toolkit-hub h3,
@@ -17,13 +17,13 @@
 }
 
 .launch-tool-panel {
-  background: #182235;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
+  background: #1e1b18;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
   padding: 1.5rem;
   margin-top: 1rem;
-  color: #f1f5f9;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: #f1ede6;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   animation: toolFadeIn 0.2s ease-out;
 }
 
