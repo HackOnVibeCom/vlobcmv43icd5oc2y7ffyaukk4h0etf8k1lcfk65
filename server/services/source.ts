@@ -84,7 +84,15 @@ export async function extractStoreContext(rawUrl: string): Promise<SourceContext
   const isAppStore = url.hostname.includes("apps.apple.com");
   const name = firstMeta(html, "og:title") || firstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || "Untitled app";
   const description = firstMeta(html, "og:description") || firstMeta(html, "description") || firstMatch(html, /"description"\s*:\s*"([^"]+)/i);
-  const rating = firstMatch(html, /"ratingValue"\s*:\s*"?([\d.]+)/i) || firstMatch(html, /aria-label=["'][^"']*?([\d.]+)\s*(?:star|rating)/i);
+  let rating = firstMatch(html, /"ratingValue"\s*:\s*"?([\d.]+)/i) || firstMatch(html, /aria-label=["'][^"']*?([\d.]+)\s*(?:star|rating)/i);
+  if (rating) {
+    const num = parseFloat(rating);
+    if (!isNaN(num) && num > 0 && num <= 5) {
+      rating = num % 1 === 0 ? num.toFixed(1) : (Math.round(num * 10) / 10).toFixed(1);
+    } else {
+      rating = undefined;
+    }
+  }
   const developer = isGooglePlay
     ? firstMatch(html, /itemprop=["']author["'][^>]*>([\s\S]*?)<\//i)
     : firstMeta(html, "author");

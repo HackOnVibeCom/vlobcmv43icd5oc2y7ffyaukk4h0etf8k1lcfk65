@@ -1952,7 +1952,15 @@ async function extractStoreContext(rawUrl) {
   const isAppStore = url.hostname.includes("apps.apple.com");
   const name = firstMeta(html, "og:title") || firstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || "Untitled app";
   const description = firstMeta(html, "og:description") || firstMeta(html, "description") || firstMatch(html, /"description"\s*:\s*"([^"]+)/i);
-  const rating = firstMatch(html, /"ratingValue"\s*:\s*"?([\d.]+)/i) || firstMatch(html, /aria-label=["'][^"']*?([\d.]+)\s*(?:star|rating)/i);
+  let rating = firstMatch(html, /"ratingValue"\s*:\s*"?([\d.]+)/i) || firstMatch(html, /aria-label=["'][^"']*?([\d.]+)\s*(?:star|rating)/i);
+  if (rating) {
+    const num = parseFloat(rating);
+    if (!isNaN(num) && num > 0 && num <= 5) {
+      rating = num % 1 === 0 ? num.toFixed(1) : (Math.round(num * 10) / 10).toFixed(1);
+    } else {
+      rating = void 0;
+    }
+  }
   const developer = isGooglePlay ? firstMatch(html, /itemprop=["']author["'][^>]*>([\s\S]*?)<\//i) : firstMeta(html, "author");
   const category = firstMatch(html, /itemprop=["']genre["'][^>]*>([\s\S]*?)<\//i) || (isAppStore ? "iOS app" : isGooglePlay ? "Android app" : void 0);
   if (!description) throw new Error("PITCHFORGE could not find a usable description on that page. Paste the app description instead.");
