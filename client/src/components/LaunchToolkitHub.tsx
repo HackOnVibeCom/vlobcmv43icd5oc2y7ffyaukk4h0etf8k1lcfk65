@@ -141,15 +141,15 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
             style={{
               padding: "0.9rem 1.25rem",
               borderRadius: "14px",
-              background: phase === "prelaunch" ? "linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(15,23,42,0.9) 100%)" : "#090d16",
-              border: `2px solid ${phase === "prelaunch" ? "#6366f1" : "rgba(255,255,255,0.1)"}`,
+              background: phase === "prelaunch" ? "#1e293b" : "#0f172a",
+              border: `1.5px solid ${phase === "prelaunch" ? "#6366f1" : "rgba(255,255,255,0.12)"}`,
               color: "#ffffff",
               textAlign: "left",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               gap: "0.75rem",
-              boxShadow: phase === "prelaunch" ? "0 8px 25px rgba(99,102,241,0.3)" : "none",
+              boxShadow: phase === "prelaunch" ? "0 8px 25px rgba(0,0,0,0.5)" : "none",
               transition: "all 0.2s ease",
             }}
           >
@@ -168,19 +168,19 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
             style={{
               padding: "0.9rem 1.25rem",
               borderRadius: "14px",
-              background: phase === "postlaunch" ? "linear-gradient(135deg, rgba(16,185,129,0.3) 0%, rgba(15,23,42,0.9) 100%)" : "#090d16",
-              border: `2px solid ${phase === "postlaunch" ? "#10b981" : "rgba(255,255,255,0.1)"}`,
+              background: phase === "postlaunch" ? "#1e293b" : "#0f172a",
+              border: `1.5px solid ${phase === "postlaunch" ? "#38bdf8" : "rgba(255,255,255,0.12)"}`,
               color: "#ffffff",
               textAlign: "left",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               gap: "0.75rem",
-              boxShadow: phase === "postlaunch" ? "0 8px 25px rgba(16,185,129,0.3)" : "none",
+              boxShadow: phase === "postlaunch" ? "0 8px 25px rgba(0,0,0,0.5)" : "none",
               transition: "all 0.2s ease",
             }}
           >
-            <div style={{ width: 36, height: 36, borderRadius: "10px", background: phase === "postlaunch" ? "#10b981" : "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <div style={{ width: 36, height: 36, borderRadius: "10px", background: phase === "postlaunch" ? "#38bdf8" : "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <Code2 size={18} color="#fff" />
             </div>
             <div>
@@ -216,19 +216,20 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
                   padding: "0.5rem 0.85rem",
                   fontSize: "0.8rem",
                   fontWeight: isActive ? 700 : 500,
-                  background: isActive ? (phase === "prelaunch" ? "#6366f1" : "#10b981") : "transparent",
-                  borderColor: isActive ? "transparent" : "transparent",
-                  color: isActive ? "#fff" : "#94a3b8",
+                  background: isActive ? (phase === "prelaunch" ? "#4f46e5" : "#0284c7") : "transparent",
+                  borderColor: "transparent",
+                  color: isActive ? "#ffffff" : "#94a3b8",
                   whiteSpace: "nowrap",
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
                   borderRadius: "8px",
                   cursor: "pointer",
+                  transition: "all 0.15s ease",
                 }}
                 onClick={() => setActiveTab(tab.id)}
               >
-                <Icon size={14} style={{ color: isActive ? "#ffffff" : "#818cf8" }} />
+                <Icon size={14} style={{ color: isActive ? "#ffffff" : "#94a3b8" }} />
                 <span>{tab.label}</span>
                 {tab.countBadge && (
                   <span
