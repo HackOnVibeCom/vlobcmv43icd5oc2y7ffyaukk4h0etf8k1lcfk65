@@ -56,6 +56,7 @@ import PrivacyPolicyGenerator from "./PrivacyPolicyGenerator";
 import ReferralCodeGenerator from "./ReferralCodeGenerator";
 import OneClickLaunchPipeline from "./OneClickLaunchPipeline";
 import CompetitorReviewAttackEngine from "./CompetitorReviewAttackEngine";
+import SocialAutopostOAuthScheduler from "./SocialAutopostOAuthScheduler";
 import "./launch-tools.css";
 
 type HubPhase = "prelaunch" | "postlaunch";
@@ -306,6 +307,7 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
 
         {activeTab === "outreach" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <SocialAutopostOAuthScheduler context={context} />
             <EmailDripCampaign context={context} />
             <PushNotificationCopy context={context} />
             <PressPitchPanel context={context} />
