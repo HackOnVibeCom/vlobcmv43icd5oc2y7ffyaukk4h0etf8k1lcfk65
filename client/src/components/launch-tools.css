@@ -57,15 +57,16 @@
 }
 
 .launch-tool-badge {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  background: rgba(99, 102, 241, 0.25);
-  color: #c7d2fe;
-  border: 1px solid rgba(99, 102, 241, 0.45);
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: rgba(36, 84, 215, 0.15);
+  color: #93c5fd;
+  border: 1px solid rgba(36, 84, 215, 0.4);
 }
 
 /* Tabs */
@@ -77,13 +78,14 @@
 }
 
 .pitch-tab-btn {
+  font-family: "JetBrains Mono", monospace;
   padding: 0.45rem 0.85rem;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d7cec0;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -94,19 +96,19 @@
 }
 
 .pitch-tab-btn.is-active {
-  background: #6366f1;
-  border-color: #818cf8;
+  background: var(--signal, #dc143c);
+  border-color: var(--signal, #dc143c);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.35);
 }
 
 /* Body and Code Boxes */
 .pitch-body-box {
-  background: #090d16;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 1rem;
-  color: #e2e8f0;
+  background: #151311;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 1.1rem;
+  color: #f1ede6;
   font-size: 0.85rem;
   line-height: 1.6;
   white-space: pre-wrap;
@@ -124,20 +126,27 @@
   align-items: flex-start;
   gap: 0.85rem;
   padding: 0.85rem 1.1rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .scheduler-milestone.is-launch-day {
-  background: rgba(99, 102, 241, 0.12);
-  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(220, 20, 60, 0.08);
+  border-color: rgba(220, 20, 60, 0.35);
 }
 
 .scheduler-time-tag {
-  font-size: 0.78rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: #a5b4fc;
+  color: #fca5a5;
+  white-space: nowrap;
+  background: #151311;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
   white-space: nowrap;
   background: rgba(0, 0, 0, 0.5);
   padding: 0.25rem 0.6rem;
