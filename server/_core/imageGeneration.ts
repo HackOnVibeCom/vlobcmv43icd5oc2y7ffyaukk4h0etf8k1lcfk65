@@ -66,7 +66,7 @@ async function fluxGenerate(prompt: string, width?: number, height?: number): Pr
 }
 
 export async function generateImage(options: GenerateImageOptions): Promise<GenerateImageResponse> {
-  const cleanPrompt = `${options.prompt} No text, letters, numbers, or typography anywhere in the image.`;
+  const cleanPrompt = `${options.prompt}. Completely clean visual artwork without any writing, pseudo-text, alien glyphs, random letters, numbers, or typography. High resolution 3D render.`;
 
   if (!options.overlayText) {
     const buffer = await fluxGenerate(cleanPrompt, options.width, options.height);
@@ -75,9 +75,12 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
   }
 
   const { headline, subtext } = options.overlayText;
-  const textPrompt = `${options.prompt} Include a short, bold promotional headline reading "${headline}"${
-    subtext ? ` with smaller supporting text reading "${subtext}"` : ""
-  }, tastefully integrated into the composition as real typography.`;
+  const cleanHeadline = headline.replace(/["'\\]/g, "").slice(0, 35);
+  const cleanSubtext = subtext ? subtext.replace(/["'\\]/g, "").slice(0, 45) : "";
+
+  const textPrompt = `${options.prompt}. In the composition, display a single, perfectly legible, bold graphic design title with the exact text: "${cleanHeadline}"${
+    cleanSubtext ? ` and small subtitle: "${cleanSubtext}"` : ""
+  }. Sharp vector typography, zero spelling errors, zero random characters or gibberish text.`;
 
   const [cleanBuffer, textBuffer] = await Promise.all([
     fluxGenerate(cleanPrompt, options.width, options.height),

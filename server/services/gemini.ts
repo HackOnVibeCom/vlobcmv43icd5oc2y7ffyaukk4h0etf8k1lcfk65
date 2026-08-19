@@ -227,5 +227,5 @@ export async function generatePosterCopy(context: SourceContext): Promise<Genera
 export function createImagePrompt(context: SourceContext): string {
   const category = context.category || "Mobile Application";
   const desc = context.description || "A modern, intuitive mobile application";
-  return `A high quality, professional promotional marketing visual for the app "${context.name}" (${category}). Context: ${desc.slice(0, 200)}. Aesthetic: clean, premium, modern UI graphics, vibrant lighting, minimal composition.`;
+  return `Award-winning commercial product showcase advertisement for "${context.name}" (${category}). Premium 3D isometric studio render, Apple keynote aesthetics, sleek glassmorphism device floating in atmospheric ambient studio lighting, ultra-clean minimalist composition, 8k resolution, cinematic depth of field, photorealistic textures, masterclass graphic design. Perfectly isolated subject with flawless background gradients. Strictly no fake UI text, no garbled letters, no watermark, no distorted glyphs.`;
 }

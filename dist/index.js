@@ -857,14 +857,16 @@ async function fluxGenerate(prompt2, width, height) {
   return Buffer.from(b64, "base64");
 }
 async function generateImage(options) {
-  const cleanPrompt = `${options.prompt} No text, letters, numbers, or typography anywhere in the image.`;
+  const cleanPrompt = `${options.prompt}. Completely clean visual artwork without any writing, pseudo-text, alien glyphs, random letters, numbers, or typography. High resolution 3D render.`;
   if (!options.overlayText) {
     const buffer = await fluxGenerate(cleanPrompt, options.width, options.height);
     const { url: url2 } = await storagePut(`generated/${Date.now()}.png`, buffer, "image/png");
     return { url: url2 };
   }
   const { headline, subtext } = options.overlayText;
-  const textPrompt = `${options.prompt} Include a short, bold promotional headline reading "${headline}"${subtext ? ` with smaller supporting text reading "${subtext}"` : ""}, tastefully integrated into the composition as real typography.`;
+  const cleanHeadline = headline.replace(/["'\\]/g, "").slice(0, 35);
+  const cleanSubtext = subtext ? subtext.replace(/["'\\]/g, "").slice(0, 45) : "";
+  const textPrompt = `${options.prompt}. In the composition, display a single, perfectly legible, bold graphic design title with the exact text: "${cleanHeadline}"${cleanSubtext ? ` and small subtitle: "${cleanSubtext}"` : ""}. Sharp vector typography, zero spelling errors, zero random characters or gibberish text.`;
   const [cleanBuffer, textBuffer] = await Promise.all([
     fluxGenerate(cleanPrompt, options.width, options.height),
     fluxGenerate(textPrompt, options.width, options.height)
@@ -1094,7 +1096,7 @@ async function generatePosterCopy(context) {
 function createImagePrompt(context) {
   const category = context.category || "Mobile Application";
   const desc2 = context.description || "A modern, intuitive mobile application";
-  return `A high quality, professional promotional marketing visual for the app "${context.name}" (${category}). Context: ${desc2.slice(0, 200)}. Aesthetic: clean, premium, modern UI graphics, vibrant lighting, minimal composition.`;
+  return `Award-winning commercial product showcase advertisement for "${context.name}" (${category}). Premium 3D isometric studio render, Apple keynote aesthetics, sleek glassmorphism device floating in atmospheric ambient studio lighting, ultra-clean minimalist composition, 8k resolution, cinematic depth of field, photorealistic textures, masterclass graphic design. Perfectly isolated subject with flawless background gradients. Strictly no fake UI text, no garbled letters, no watermark, no distorted glyphs.`;
 }
 
 // server/services/listingScore.ts
