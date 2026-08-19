@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -61,6 +61,18 @@ export default function FeedMockupModal({
 }) {
   const [activePlatform, setActivePlatform] = useState<Platform>(initialPlatform);
   const [copied, setCopied] = useState(false);
+
+  // Lock background body scroll so only the modal scrolls
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

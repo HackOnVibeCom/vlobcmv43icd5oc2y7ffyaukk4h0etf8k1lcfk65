@@ -1,66 +1,111 @@
-import { buildShareLinks, openShareLink, platformUploadUrl } from "@/lib/shareLinks";
-import { MessageCircle, Send, Linkedin, Facebook, Mail, ArrowUpRight, UploadCloud } from "lucide-react";
+import { openShareLink, platformUploadUrl } from "@/lib/shareLinks";
+import {
+  ArrowUpRight,
+  Clipboard,
+  ExternalLink,
+  Facebook,
+  KeyRound,
+  Linkedin,
+  Lock,
+  Mail,
+  MessageCircle,
+  Send,
+  Sparkles,
+  UploadCloud,
+} from "lucide-react";
 import { toast } from "sonner";
-import type { ReactNode } from "react";
 
 type Props = {
   text: string;
   url?: string;
   subject?: string;
-  /** When set, renders a single "Upload to <platform>" button scoped to this card's own text. Only rendered for platforms with a real compose intent (Twitter/X, LinkedIn). */
   platform?: string;
+  isSignedIn?: boolean;
 };
 
-export default function ShareLinks({ text, url, subject, platform }: Props) {
-  const links = buildShareLinks(text, url, subject);
+const PLATFORM_DISPATCH_LINKS: Record<string, { label: string; url: string; note?: string }> = {
+  twitter: { label: "1-Click Post to X", url: "https://twitter.com/intent/tweet" },
+  linkedin: { label: "1-Click Post to LinkedIn", url: "https://www.linkedin.com/sharing/share-offsite/" },
+  reddit: { label: "1-Click Submit to Reddit", url: "https://www.reddit.com/submit" },
+  instagram: { label: "Open Instagram Web", url: "https://www.instagram.com/" },
+  appStore: { label: "Open App Store Connect", url: "https://appstoreconnect.apple.com/" },
+  googlePlay: { label: "Open Google Play Console", url: "https://play.google.com/console" },
+  productHunt: { label: "Open Product Hunt Post", url: "https://www.producthunt.com/posts/new" },
+};
 
-  async function handleUpload() {
-    if (!platform) return;
+export default function ShareLinks({ text, url, subject, platform = "twitter", isSignedIn = false }: Props) {
+  const currentMeta = PLATFORM_DISPATCH_LINKS[platform] || { label: "Manual Upload", url: "https://twitter.com" };
+
+  const handleManualUpload = async () => {
+    // Copy the specific card text to clipboard first
+    await navigator.clipboard.writeText(text).catch(() => {});
+    toast.success(`Copied ${platform} copy to clipboard! Opening upload window...`);
+
     const upload = await platformUploadUrl(platform, text, url);
-    if (!upload) return;
-    if (upload.copiedFirst) toast.success("Copy copied — paste it into the LinkedIn post box.");
-    openShareLink(upload.href);
-  }
+    if (upload?.href) {
+      openShareLink(upload.href);
+    } else {
+      openShareLink(currentMeta.url);
+    }
+  };
 
-  const showUpload = platform === "twitter" || platform === "linkedin";
-  const uploadLabel = platform === "twitter" ? "Upload to X / Twitter" : "Upload to LinkedIn";
-
-  const targets: Array<{ key: string; label: string; href?: string; icon: ReactNode }> = [
-    { key: "twitter", label: "X / Twitter", href: links.twitter, icon: <ArrowUpRight size={13} /> },
-    { key: "linkedin", label: "LinkedIn", href: links.linkedin, icon: <Linkedin size={13} /> },
-    { key: "whatsapp", label: "WhatsApp", href: links.whatsapp, icon: <MessageCircle size={13} /> },
-    { key: "telegram", label: "Telegram", href: links.telegram, icon: <Send size={13} /> },
-    { key: "facebook", label: "Facebook", href: links.facebook, icon: <Facebook size={13} /> },
-    { key: "email", label: "Email", href: links.email, icon: <Mail size={13} /> },
-  ].filter(t => Boolean(t.href));
+  const handleOAuthAutoPost = () => {
+    if (!isSignedIn) {
+      toast.error("Cloud OAuth Autopost requires signing in. In guest mode, use 1-Click Manual Upload below!");
+    } else {
+      toast.info("Please connect your OAuth account in Settings → Integrations.");
+    }
+  };
 
   return (
-    <div className="share-links">
-      <span className="share-links__label">Share now</span>
-      <div className="share-links__row">
-        {showUpload && (
-          <button
-            type="button"
-            className="share-links__btn share-links__btn--upload"
-            onClick={handleUpload}
-            title={uploadLabel}
-          >
-            <UploadCloud size={13} />
-            {uploadLabel}
-          </button>
-        )}
-        {targets.map(t => (
-          <button
-            key={t.key}
-            type="button"
-            className="share-links__btn"
-            onClick={() => openShareLink(t.href!)}
-            title={`Share on ${t.label}`}
-          >
-            {t.icon}
-            {t.label}
-          </button>
-        ))}
+    <div className="share-links" style={{ display: "flex", flexDirection: "column", gap: "0.4rem", marginTop: "0.5rem" }}>
+      <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", alignItems: "center" }}>
+        {/* 1. Manual Upload (Copies text & opens target platform) */}
+        <button
+          type="button"
+          className="share-links__btn share-links__btn--upload"
+          onClick={handleManualUpload}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            padding: "0.4rem 0.75rem",
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            background: "#131c2e",
+            color: "#ffffff",
+            border: "1px solid rgba(255,255,255,0.15)",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+          title={`Copy copy and open ${platform}`}
+        >
+          <UploadCloud size={13} color="#818cf8" />
+          <span>Manual Upload ({platform})</span>
+        </button>
+
+        {/* 2. Cloud OAuth Autopost Button (Warns guest users cleanly) */}
+        <button
+          type="button"
+          onClick={handleOAuthAutoPost}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            padding: "0.4rem 0.65rem",
+            fontSize: "0.72rem",
+            fontWeight: 600,
+            background: "rgba(255,255,255,0.04)",
+            color: "#94a3b8",
+            border: "1px dashed rgba(255,255,255,0.15)",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+          title="Automated cloud dispatch"
+        >
+          <KeyRound size={11} color="#f59e0b" />
+          <span>Auto-Post (OAuth required)</span>
+        </button>
       </div>
     </div>
   );
