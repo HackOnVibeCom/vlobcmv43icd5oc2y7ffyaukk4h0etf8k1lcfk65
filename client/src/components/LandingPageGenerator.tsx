@@ -27,6 +27,21 @@ export default function LandingPageGenerator({ context }: { context?: Context })
   const [accentColor, setAccentColor] = useState("#6366f1");
   const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
 
+  // Lock main website scroll so only the fullscreen preview scrolls
+  useEffect(() => {
+    if (isFullscreenPreview) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [isFullscreenPreview]);
+
   const generateHTML = () => `<!DOCTYPE html>
 <html lang="en">
 <head>
