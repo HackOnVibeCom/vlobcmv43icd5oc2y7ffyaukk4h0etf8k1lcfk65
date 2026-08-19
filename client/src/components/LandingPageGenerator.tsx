@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Check, Clipboard, Code2, Download, Eye, Globe2, Maximize2, Sparkles, Star, X } from "lucide-react";
+import { Check, Clipboard, Code2, Download, ExternalLink, Eye, Globe2, Maximize2, Sparkles, Star, X } from "lucide-react";
 import "./launch-tools.css";
 
 type Context = {
@@ -266,16 +267,23 @@ h1 span{background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 50%,${accentColor} 
       </div>
 
       {/* Fullscreen Interactive Modal */}
-      {isFullscreenPreview && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.9)", backdropFilter: "blur(8px)", display: "flex", flexDirection: "column" }}>
-          <div style={{ background: "#131c2e", padding: "0.75rem 1.5rem", borderBottom: "1px solid rgba(255,255,255,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      {isFullscreenPreview && createPortal(
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh", zIndex: 999999, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)", display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
+          <div style={{ background: "#131c2e", padding: "0.85rem 1.75rem", borderBottom: "1px solid rgba(255,255,255,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-              <span style={{ fontSize: "1rem", fontWeight: 800, color: "#fff" }}>🚀 Live Fullscreen Microsite Preview</span>
+              <span style={{ fontSize: "1.05rem", fontWeight: 800, color: "#fff" }}>🚀 Live Fullscreen Microsite Preview</span>
               <span style={{ fontSize: "0.75rem", padding: "0.2rem 0.6rem", borderRadius: "9999px", background: "rgba(16,185,129,0.2)", color: "#10b981", fontWeight: 700 }}>
                 100% Responsive HTML
               </span>
             </div>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              <Button size="sm" onClick={() => {
+                const blob = new Blob([generateHTML()], { type: "text/html" });
+                const url = URL.createObjectURL(blob);
+                window.open(url, "_blank");
+              }} style={{ background: "rgba(255,255,255,0.1)", color: "#fff" }}>
+                <ExternalLink size={13} /> Open in Dedicated Browser Tab
+              </Button>
               <Button size="sm" onClick={handleDownload} style={{ background: "#6366f1", color: "#fff" }}>
                 <Download size={13} /> Download .html
               </Button>
@@ -287,9 +295,10 @@ h1 span{background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 50%,${accentColor} 
           <iframe
             srcDoc={generateHTML()}
             title="Fullscreen Microsite"
-            style={{ width: "100%", flex: 1, border: "none" }}
+            style={{ width: "100vw", flex: 1, border: "none", background: "#090d16" }}
           />
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

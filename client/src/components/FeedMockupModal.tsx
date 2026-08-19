@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -9,6 +10,7 @@ import {
   Heart,
   MessageCircle,
   Repeat2,
+  Send,
   Share2,
   Sparkles,
   Star,
@@ -92,7 +94,7 @@ export default function FeedMockupModal({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return (
+  return createPortal(
     <div className="mockup-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="mockup-modal" onClick={e => e.stopPropagation()}>
         {/* Header */}
@@ -126,186 +128,129 @@ export default function FeedMockupModal({
           })}
         </div>
 
-        {/* Mockup Preview Body */}
+        {/* Body Content */}
         <div className="mockup-modal__body">
           <div className="mockup-preview-wrap">
-            {/* 1. Twitter / X */}
             {activePlatform === "twitter" && (
               <div className="mockup-card-twitter">
                 <div className="mockup-twitter-header">
                   <div className="mockup-avatar">{appInitial}</div>
                   <div className="mockup-twitter-user">
-                    <div className="mockup-twitter-names">
-                      <span>{appName}</span>
-                      <span className="mockup-verified">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                        </svg>
-                      </span>
-                    </div>
-                    <span className="mockup-twitter-handle">@{appName.toLowerCase().replace(/[^a-z0-9]/g, "")} · 1m</span>
+                    <span className="mockup-name">{appName}</span>
+                    <span className="mockup-handle">@{appName.toLowerCase().replace(/[^a-z0-9]/g, "")}</span>
                   </div>
                 </div>
-
                 <div className="mockup-twitter-text">{content}</div>
-
-                <div className="mockup-twitter-media">
-                  <Sparkles size={24} color="#818cf8" />
-                  <span>Launch Visual / Store Preview Card</span>
-                </div>
-
-                <div className="mockup-twitter-metrics">
+                <div className="mockup-twitter-actions">
                   <span><MessageCircle size={15} /> 12</span>
-                  <span><Repeat2 size={15} /> 28</span>
-                  <span><Heart size={15} /> 142</span>
+                  <span><Repeat2 size={15} /> 48</span>
+                  <span><Heart size={15} /> 284</span>
                   <span><Share2 size={15} /></span>
                 </div>
               </div>
             )}
 
-            {/* 2. LinkedIn */}
             {activePlatform === "linkedin" && (
               <div className="mockup-card-linkedin">
                 <div className="mockup-linkedin-header">
-                  <div className="mockup-avatar" style={{ background: "linear-gradient(135deg, #0077b5, #00a0dc)" }}>
-                    {appInitial}
-                  </div>
-                  <div className="mockup-linkedin-author">
-                    <h5>{appName}</h5>
-                    <p>Founder & Creator · 1st · Just now · 🌐</p>
+                  <div className="mockup-avatar">{appInitial}</div>
+                  <div>
+                    <div className="mockup-name">{appName}</div>
+                    <div className="mockup-subtitle">Official Product Announcement • 1h</div>
                   </div>
                 </div>
-
-                <div className="mockup-linkedin-body">{content}</div>
-
-                <div className="mockup-linkedin-footer">
+                <div className="mockup-linkedin-text">{content}</div>
+                <div className="mockup-linkedin-actions">
                   <span><ThumbsUp size={15} /> Like</span>
                   <span><MessageCircle size={15} /> Comment</span>
                   <span><Repeat2 size={15} /> Repost</span>
-                  <span><Share2 size={15} /> Send</span>
+                  <span><Send size={15} /> Send</span>
                 </div>
               </div>
             )}
 
-            {/* 3. Instagram */}
             {activePlatform === "instagram" && (
               <div className="mockup-card-instagram">
                 <div className="mockup-instagram-header">
-                  <div className="mockup-instagram-profile">
-                    <div className="mockup-avatar" style={{ background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)" }}>
-                      {appInitial}
-                    </div>
-                    <span>{appName.toLowerCase().replace(/[^a-z0-9]/g, "_")}</span>
+                  <div className="mockup-avatar">{appInitial}</div>
+                  <span className="mockup-name">{appName.toLowerCase().replace(/[^a-z0-9]/g, "")}</span>
+                </div>
+                <div className="mockup-instagram-image">
+                  <div className="mockup-instagram-placeholder">
+                    <Sparkles size={32} color="#818cf8" />
+                    <span>{appName} Visual Asset</span>
                   </div>
-                  <span style={{ fontSize: "1.2rem", letterSpacing: "2px" }}>•••</span>
                 </div>
-
-                <div className="mockup-instagram-image-box">
-                  <Sparkles size={36} />
-                  <strong style={{ fontSize: "1.25rem" }}>{appName}</strong>
-                  <span style={{ fontSize: "0.85rem", opacity: 0.8 }}>Official Launch Showcase</span>
-                </div>
-
                 <div className="mockup-instagram-actions">
                   <div className="mockup-instagram-actions-left">
                     <Heart size={20} />
                     <MessageCircle size={20} />
-                    <Share2 size={20} />
+                    <Send size={20} />
                   </div>
-                  <span>🔖</span>
                 </div>
-
                 <div className="mockup-instagram-caption">
-                  <strong>{appName.toLowerCase().replace(/[^a-z0-9]/g, "_")} </strong>
-                  {content}
+                  <b>{appName.toLowerCase().replace(/[^a-z0-9]/g, "")}</b> {content}
                 </div>
               </div>
             )}
 
-            {/* 4. App Store */}
             {activePlatform === "appStore" && (
               <div className="mockup-card-appstore">
-                <div className="mockup-appstore-top">
-                  <div className="mockup-app-icon">{appInitial}</div>
+                <div className="mockup-appstore-header">
+                  <div className="mockup-appstore-icon">{appInitial}</div>
                   <div className="mockup-appstore-meta">
-                    <h4>{appName}</h4>
-                    <p>{context?.category || "Productivity & Utilities"}</p>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <span style={{ color: "#ffd60a", display: "inline-flex", alignItems: "center", gap: 2, fontSize: "0.85rem" }}>
-                        <Star size={13} fill="#ffd60a" /> {context?.rating || "4.9"}
-                      </span>
-                      <span style={{ color: "#8e8e93", fontSize: "0.8rem" }}>#1 in Category</span>
-                    </div>
+                    <div className="mockup-name">{appName}</div>
+                    <div className="mockup-subtitle">{context?.category || "Mobile Application"}</div>
+                    <div className="mockup-appstore-btn">GET</div>
                   </div>
-                  <button type="button" className="mockup-appstore-btn">GET</button>
                 </div>
-
-                <div className="mockup-appstore-promo-box">
-                  <h6>Promotional Text (App Store Connect)</h6>
+                <div className="mockup-appstore-promo">
+                  <span className="mockup-appstore-badge">PROMOTIONAL TEXT</span>
                   <p>{content}</p>
                 </div>
               </div>
             )}
 
-            {/* 5. Google Play Store */}
             {activePlatform === "googlePlay" && (
-              <div className="mockup-card-playstore">
-                <div className="mockup-playstore-head">
-                  <div className="mockup-app-icon" style={{ borderRadius: "18px", background: "linear-gradient(135deg, #01875f, #00a86b)" }}>
-                    {appInitial}
-                  </div>
-                  <div className="mockup-playstore-info">
-                    <h4>{appName}</h4>
-                    <p>{context?.developer || "Verified Developer"}</p>
-                    <div className="mockup-playstore-chips">
-                      <span>4.8 ★</span>
-                      <span>50K+ Downloads</span>
-                      <span>Everyone</span>
-                    </div>
+              <div className="mockup-card-googleplay">
+                <div className="mockup-googleplay-header">
+                  <div className="mockup-googleplay-icon">{appInitial}</div>
+                  <div>
+                    <div className="mockup-name">{appName}</div>
+                    <div className="mockup-subtitle" style={{ color: "#01875f" }}>{context?.developer || "Verified Developer"}</div>
+                    <div className="mockup-googleplay-rating">4.8 ★ · 10K+ Downloads</div>
                   </div>
                 </div>
-
-                <div className="mockup-playstore-desc-box">
-                  <h6>Short description (Google Play Console)</h6>
+                <div className="mockup-googleplay-short">
+                  <span className="mockup-googleplay-badge">SHORT DESCRIPTION</span>
                   <p>{content}</p>
                 </div>
               </div>
             )}
 
-            {/* 6. Product Hunt */}
             {activePlatform === "productHunt" && (
               <div className="mockup-card-producthunt">
-                <div className="mockup-ph-top">
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                    <div className="mockup-app-icon" style={{ width: 48, height: 48, fontSize: "1.2rem", background: "#ff6154" }}>
-                      {appInitial}
-                    </div>
-                    <div>
-                      <h4 style={{ margin: 0, fontSize: "1.1rem" }}>{appName}</h4>
-                      <span className="mockup-ph-badge">FEATURED TODAY</span>
-                    </div>
+                <div className="mockup-producthunt-header">
+                  <div className="mockup-producthunt-icon">{appInitial}</div>
+                  <div className="mockup-producthunt-info">
+                    <div className="mockup-name">{appName}</div>
+                    <div className="mockup-subtitle">Featured on Product Hunt</div>
                   </div>
-                  <div className="mockup-ph-upvote">
-                    ▲ <span>142</span>
+                  <div className="mockup-producthunt-upvote">
+                    ▲ <b>412</b>
                   </div>
                 </div>
-
-                <div className="mockup-ph-comment-box">
-                  <div className="mockup-ph-author">
-                    <div className="mockup-avatar" style={{ width: 28, height: 28, fontSize: "0.75rem" }}>M</div>
-                    <strong style={{ fontSize: "0.88rem" }}>Maker Pitch</strong>
-                    <span className="mockup-ph-maker-tag">MAKER</span>
-                  </div>
-                  <div className="mockup-ph-comment-body">{content}</div>
+                <div className="mockup-producthunt-tagline">
+                  <p>{content}</p>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Footer actions */}
+        {/* Footer */}
         <div className="mockup-modal__footer">
-          <div className="mockup-footer-info">
+          <div className="mockup-footer-charcount">
             <span style={{ color: isOverLimit ? "#ef4444" : "#94a3b8", fontWeight: 500 }}>
               {charCount} / {charLimit} characters {isOverLimit && "(Over platform limit)"}
             </span>
@@ -321,6 +266,7 @@ export default function FeedMockupModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
