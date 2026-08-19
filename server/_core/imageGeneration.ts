@@ -66,33 +66,13 @@ async function fluxGenerate(prompt: string, width?: number, height?: number): Pr
 }
 
 export async function generateImage(options: GenerateImageOptions): Promise<GenerateImageResponse> {
-  const cleanPrompt = `${options.prompt}. Completely clean visual artwork without any writing, pseudo-text, alien glyphs, random letters, numbers, or typography. High resolution 3D render.`;
+  // Pure 3D studio render prompt with strict negative bounds against pseudo-letters and glyphs
+  const cleanPrompt = `${options.prompt}. Pure 3D product render in Apple Keynote studio lighting, clean solid gradients, hyperrealistic materials, completely free of any text, letters, symbols, logos, watermarks, or typography.`;
 
-  if (!options.overlayText) {
-    const buffer = await fluxGenerate(cleanPrompt, options.width, options.height);
-    const { url } = await storagePut(`generated/${Date.now()}.png`, buffer, "image/png");
-    return { url };
-  }
+  const buffer = await fluxGenerate(cleanPrompt, options.width, options.height);
+  const { url } = await storagePut(`generated/${Date.now()}.png`, buffer, "image/png");
 
-  const { headline, subtext } = options.overlayText;
-  const cleanHeadline = headline.replace(/["'\\]/g, "").slice(0, 35);
-  const cleanSubtext = subtext ? subtext.replace(/["'\\]/g, "").slice(0, 45) : "";
-
-  const textPrompt = `${options.prompt}. In the composition, display a single, perfectly legible, bold graphic design title with the exact text: "${cleanHeadline}"${
-    cleanSubtext ? ` and small subtitle: "${cleanSubtext}"` : ""
-  }. Sharp vector typography, zero spelling errors, zero random characters or gibberish text.`;
-
-  const [cleanBuffer, textBuffer] = await Promise.all([
-    fluxGenerate(cleanPrompt, options.width, options.height),
-    fluxGenerate(textPrompt, options.width, options.height),
-  ]);
-
-  const [{ url }, { url: textUrl }] = await Promise.all([
-    storagePut(`generated/${Date.now()}-clean.png`, cleanBuffer, "image/png"),
-    storagePut(`generated/${Date.now()}-text.png`, textBuffer, "image/png"),
-  ]);
-
-  return { url, textUrl };
+  return { url, textUrl: url };
 }
 
 // Re-export stub so existing callers that imported listImageModels don't break
