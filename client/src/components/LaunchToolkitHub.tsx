@@ -91,11 +91,9 @@ const PRELAUNCH_TABS: Array<{ id: HubTab; label: string; icon: any; countBadge?:
   { id: "pipeline", label: "🚀 1-Click Launch & Telemetry", icon: Rocket, countBadge: "Autonomous Hero" },
   { id: "landing", label: "Landing Page & UTMs", icon: Globe2, countBadge: "HTML + Fullscreen" },
   { id: "visuals", label: "Visual Director & QR Studio", icon: ImageIcon, countBadge: "SVG & PNG" },
-  { id: "storefront", label: "ASO & Keyword Packer", icon: Target, countBadge: "Store Ready" },
   { id: "paid_ads", label: "Paid Ads (ASA / Google)", icon: TrendingUp, countBadge: "CSV Bulk Upload" },
   { id: "outreach", label: "Multi-Channel Autopost & Schedule", icon: Zap, countBadge: "Direct Compose" },
   { id: "content", label: "Content Calendar & Video", icon: Film, countBadge: "7-Day + Script" },
-  { id: "community", label: "Show HN & Reddit Angles", icon: Flame, countBadge: "Anti-Spam" },
   { id: "competitors", label: "Competitor Conquest & i18n", icon: Swords, countBadge: "Attack Ads + 6 Langs" },
   { id: "legal", label: "Privacy Policy & Terms", icon: Shield, countBadge: "App Store Req" },
 ];

@@ -102,8 +102,8 @@ export default function SocialAutopostOAuthScheduler({ context }: { context?: Co
     setIsBroadcasting(true);
     setTimeout(() => {
       setIsBroadcasting(false);
-      toast.success(`🚀 Successfully dispatched launch copy to all ${channels.length} connected channels!`);
-    }, 1200);
+      toast.info("ℹ️ Cloud OAuth broadcast requires logging in with your developer account. In Guest Mode, use the 1-Click Post buttons below!");
+    }, 800);
   };
 
   const handleSchedulePost = () => {
@@ -115,9 +115,8 @@ export default function SocialAutopostOAuthScheduler({ context }: { context?: Co
     setIsScheduling(true);
     setTimeout(() => {
       setIsScheduling(false);
-      const dateStr = new Date(selectedDate).toLocaleString();
-      toast.success(`📅 Autopost scheduled across all channels for ${dateStr}!`);
-    }, 900);
+      toast.info("ℹ️ Automated cloud scheduling requires logging in. Sign in to lock in your multi-channel queue!");
+    }, 700);
   };
 
   const handleOpenOAuthLink = (url: string, name: string) => {
