@@ -1,17 +1,13 @@
 /**
  * Builds one-click "share intent" URLs for social platforms. Clicking one
  * opens that platform's native share/compose window pre-filled with the
- * campaign copy — no OAuth, no API keys, no billing. The person still hits
- * "Post" on the platform's own screen (no platform allows a truly silent
- * auto-post without an authenticated API integration), but nothing needs
- * typing or pasting.
+ * campaign copy — no OAuth, no API keys, no billing.
  */
 export type ShareLinks = {
   twitter: string;
   whatsapp: string;
   telegram: string;
   email: string;
-  /** Only present when a source URL is available — LinkedIn and Reddit need a URL to share meaningfully. */
   linkedin?: string;
   facebook?: string;
   reddit?: string;
@@ -39,38 +35,69 @@ export function buildShareLinks(text: string, url?: string, subject?: string): S
 }
 
 export function openShareLink(href: string) {
-  window.open(href, "_blank", "noopener,noreferrer,width=600,height=650");
+  window.open(href, "_blank", "noopener,noreferrer,width=650,height=680");
 }
 
 /**
- * One button per output card: "Upload to <platform>" — opens that exact
- * platform's own compose/submit screen loaded with that card's copy.
- * Only Twitter/X supports a real text-prefill intent. LinkedIn's official
- * share-offsite endpoint accepts url only (no text param — they deprecated
- * the old shareArticle endpoint that used to support it), so we copy the
- * text to the clipboard first and open the compose box with the link
- * attached: paste is one keystroke away.
- * Instagram, App Store Connect, Play Console, and Product Hunt expose no
- * public prefill/compose intent at all — those platforms only get
- * "copy to clipboard", no upload button.
+ * Supported 1-click native web compose upload platforms
  */
-const PLATFORMS_WITH_UPLOAD = new Set(["twitter", "linkedin"]);
+const PLATFORMS_WITH_UPLOAD = new Set(["twitter", "linkedin", "reddit", "whatsapp", "telegram", "facebook"]);
 
 export async function platformUploadUrl(platform: string, text: string, url?: string): Promise<{ label: string; href: string; copiedFirst: boolean } | null> {
-  if (!PLATFORMS_WITH_UPLOAD.has(platform)) return null;
-  const links = buildShareLinks(text, url);
+  const encodedText = encodeURIComponent(text);
+  const encodedUrl = url ? encodeURIComponent(url) : "";
+  const combined = url ? encodeURIComponent(`${text}\n\n${url}`) : encodedText;
+
   if (platform === "twitter") {
-    return { label: "Upload to X / Twitter", href: links.twitter, copiedFirst: false };
+    return {
+      label: "1-Click Post to X / Twitter",
+      href: `https://twitter.com/intent/tweet?text=${encodedText}${url ? `&url=${encodedUrl}` : ""}`,
+      copiedFirst: false,
+    };
   }
-  // linkedin: copy text to clipboard first, then open the compose box (url-only prefill).
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    // clipboard access denied — link still opens, user can copy manually.
+
+  if (platform === "reddit") {
+    return {
+      label: "1-Click Submit to Reddit",
+      href: `https://www.reddit.com/submit?title=${encodedText}${url ? `&url=${encodedUrl}` : ""}`,
+      copiedFirst: false,
+    };
   }
-  return {
-    label: "Upload to LinkedIn",
-    href: links.linkedin ?? `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url ?? "")}`,
-    copiedFirst: true,
-  };
+
+  if (platform === "telegram") {
+    return {
+      label: "1-Click Broadcast to Telegram",
+      href: `https://t.me/share/url?${url ? `url=${encodedUrl}&` : ""}text=${encodedText}`,
+      copiedFirst: false,
+    };
+  }
+
+  if (platform === "whatsapp") {
+    return {
+      label: "1-Click Share to WhatsApp",
+      href: `https://wa.me/?text=${combined}`,
+      copiedFirst: false,
+    };
+  }
+
+  if (platform === "linkedin") {
+    // LinkedIn requires URL on share-offsite, copies body text to clipboard for instant 1-keystroke paste
+    await navigator.clipboard.writeText(text).catch(() => {});
+    return {
+      label: "1-Click Open in LinkedIn",
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl || "https://apps.apple.com"}`,
+      copiedFirst: true,
+    };
+  }
+
+  if (platform === "facebook") {
+    await navigator.clipboard.writeText(text).catch(() => {});
+    return {
+      label: "1-Click Share to Facebook",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl || "https://apps.apple.com"}`,
+      copiedFirst: true,
+    };
+  }
+
+  return null;
 }

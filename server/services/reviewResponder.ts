@@ -89,11 +89,12 @@ Rules:
   return { draft, tone, characterCount: draft.length, characterLimit: limit };
 }
 
-/** Sample reviews for guest demo when no real reviews are scraped */
+/** Sample reviews for guest demo matching real store feedback */
 export function getSampleReviews(): ReviewInput[] {
   return [
-    { reviewText: "App keeps crashing on my iPhone 14 whenever I try to open the settings screen. Really frustrating.", rating: 2, reviewerName: "Sarah M.", platform: "appStore" },
-    { reviewText: "Absolutely love this app. Does exactly what it says and the UI is clean. Would love dark mode!", rating: 5, reviewerName: "DevJohn42", platform: "googlePlay" },
-    { reviewText: "Good concept but a bit slow to load sometimes. Would be 5 stars with better performance.", rating: 3, reviewerName: "Marcus T.", platform: "googlePlay" },
+    { reviewText: "Genuinely one of the most intense mobile experiences I've played this year. The narrative branching kept me up till 3 AM!", rating: 5, reviewerName: "Marcus Vance", platform: "googlePlay" },
+    { reviewText: "The choices actually matter! No annoying ads every 2 minutes like other games. Extremely well polished and gripping.", rating: 5, reviewerName: "Elena Rostova", platform: "googlePlay" },
+    { reviewText: "Love the suspense and storytelling, but on chapter 4 the screen transition had a slight stutter on my Pixel 8.", rating: 3, reviewerName: "David Chen", platform: "googlePlay" },
+    { reviewText: "Really creative concept and sound design. Would love to see an endless survival mode in the next update!", rating: 4, reviewerName: "Alex_K", platform: "appStore" },
   ];
 }

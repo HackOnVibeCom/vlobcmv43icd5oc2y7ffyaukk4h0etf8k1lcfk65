@@ -137,9 +137,13 @@ export default function SocialAutopostOAuthScheduler({ context }: { context?: Co
         </div>
       </div>
 
-      <p style={{ color: "#94a3b8", fontSize: "0.85rem", margin: "0 0 1.25rem 0", lineHeight: 1.5 }}>
-        Directly broadcast your launch copy or schedule automated multi-channel posts across Discord, Slack, Telegram, Twitter/X, and LinkedIn without paid API subscriptions or token caps.
-      </p>
+      {/* ⚠️ Honest Guest / Live Mode Notice */}
+      <div style={{ background: "rgba(99, 102, 241, 0.08)", border: "1px solid rgba(99, 102, 241, 0.25)", borderRadius: "12px", padding: "0.9rem 1.1rem", marginBottom: "1.25rem", display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+        <Sparkles size={18} color="#818cf8" style={{ marginTop: 2, flexShrink: 0 }} />
+        <div style={{ fontSize: "0.82rem", color: "#cbd5e1", lineHeight: 1.45 }}>
+          <b style={{ color: "#ffffff" }}>How Direct 1-Click Posting Works:</b> For Discord, Slack, and Telegram, add your incoming Webhook URL. For Twitter/X, Reddit, and LinkedIn, click the <b>1-Click Direct Compose</b> buttons below to open pre-filled compose windows instantly without expensive OAuth tokens.
+        </div>
+      </div>
 
       {/* Mode Switcher */}
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem" }}>

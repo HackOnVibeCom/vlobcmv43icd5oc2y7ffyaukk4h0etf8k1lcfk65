@@ -89,12 +89,11 @@ type CampaignContext = {
 
 const PRELAUNCH_TABS: Array<{ id: HubTab; label: string; icon: any; countBadge?: string }> = [
   { id: "pipeline", label: "🚀 1-Click Launch & Telemetry", icon: Rocket, countBadge: "Autonomous Hero" },
-  { id: "landing", label: "Landing Page & UTMs", icon: Globe2, countBadge: "HTML + 8 Links" },
+  { id: "landing", label: "Landing Page & UTMs", icon: Globe2, countBadge: "HTML + Fullscreen" },
   { id: "visuals", label: "Visual Director & QR Studio", icon: ImageIcon, countBadge: "SVG & PNG" },
-  { id: "storefront", label: "ASO & A/B Copy Testing", icon: Target, countBadge: "6 Engines" },
-  { id: "paid_ads", label: "Paid Ads (ASA / Google)", icon: TrendingUp, countBadge: "Keywords" },
-  { id: "product_hunt", label: "Product Hunt Playbook", icon: Trophy, countBadge: "Velocity" },
-  { id: "outreach", label: "Email Drip & PR Launch", icon: Mail, countBadge: "Drip + PR" },
+  { id: "storefront", label: "ASO & Keyword Packer", icon: Target, countBadge: "Store Ready" },
+  { id: "paid_ads", label: "Paid Ads (ASA / Google)", icon: TrendingUp, countBadge: "CSV Bulk Upload" },
+  { id: "outreach", label: "Multi-Channel Autopost & Schedule", icon: Zap, countBadge: "Direct Compose" },
   { id: "content", label: "Content Calendar & Video", icon: Film, countBadge: "7-Day + Script" },
   { id: "community", label: "Show HN & Reddit Angles", icon: Flame, countBadge: "Anti-Spam" },
   { id: "competitors", label: "Competitor Conquest & i18n", icon: Swords, countBadge: "Attack Ads + 6 Langs" },
@@ -286,7 +285,6 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
         {activeTab === "storefront" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <PsychologicalTriggerAnalyzer context={context} />
-            <ABCopySimulator context={context} />
             <SubtitleMatrixPanel context={context} />
             <LaunchChecklist context={context} />
             <KeywordPacker context={context} />
