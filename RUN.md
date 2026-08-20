@@ -3,7 +3,7 @@
 Full-stack app: React 18 (Vite 7) client + Node/tRPC server, MySQL via Drizzle ORM, Clerk auth, Google Gemini multi-model ladder for text generation, Cloudflare Workers AI for 3D visual renders.
 
 **Live demo:** https://pinchforge.chinmayshinde.tech  
-**Demo video:** https://www.youtube.com/watch?v=tRQB1lFF2WA
+**Demo video:** https://youtu.be/jPfwg38LY88
 
 ---
 

@@ -1,7 +1,7 @@
 # PINCHFORGE — Hackathon Questionnaire
 
 **Live URL:** https://pinchforge.chinmayshinde.tech  
-**Demo Video:** https://www.youtube.com/watch?v=tRQB1lFF2WA  
+**Demo Video:** https://youtu.be/jPfwg38LY88  
 **No login required to try every core feature in guest mode.**
 
 ---
@@ -57,4 +57,4 @@
 ---
 
 **Live URL:** https://pinchforge.chinmayshinde.tech  
-**Demo Video:** https://www.youtube.com/watch?v=tRQB1lFF2WA
+**Demo Video:** https://youtu.be/jPfwg38LY88

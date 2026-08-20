@@ -3,7 +3,7 @@
 > **Mobile App Growth & Distribution Operating System.**  
 > Autonomous Promotion & In-App Virality for iOS & Android Apps · 20+ Production Engines · 100% Verifiable.
 
-[![Demo Video](https://img.shields.io/badge/▶_Watch_Demo-YouTube-red?style=for-the-badge)](https://www.youtube.com/watch?v=tRQB1lFF2WA)
+[![Demo Video](https://img.shields.io/badge/▶_Watch_Demo-YouTube-red?style=for-the-badge)](https://youtu.be/jPfwg38LY88)
 [![Live App](https://img.shields.io/badge/🚀_Try_Live-No_Login_Needed-black?style=for-the-badge)](https://pinchforge.chinmayshinde.tech)
 
 Turn any mobile store listing (Google Play or Apple App Store URL), PDF brief, or description into an end-to-end multi-channel acquisition and retention campaign in seconds. **No login required to generate, test live mockups, export CSVs, or download HTML landing pages.**
@@ -13,7 +13,7 @@ Turn any mobile store listing (Google Play or Apple App Store URL), PDF brief, o
 ## Live Demo & Video
 
 - 🔗 **Live App:** https://pinchforge.chinmayshinde.tech  
-- 📺 **Video Walkthrough:** https://www.youtube.com/watch?v=tRQB1lFF2WA
+- 📺 **Video Walkthrough:** https://youtu.be/jPfwg38LY88
 
 ---
 
@@ -224,7 +224,7 @@ shared/               Types and constants
 
 ## Demo video
 
-📺 https://www.youtube.com/watch?v=tRQB1lFF2WA
+📺 https://youtu.be/jPfwg38LY88
 
 ---
 
