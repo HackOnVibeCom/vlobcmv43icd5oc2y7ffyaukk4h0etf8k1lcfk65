@@ -1,6 +1,6 @@
-# PITCHFORGE — Run Guide
+# PINCHFORGE — Run Guide
 
-Full-stack app: React (Vite) client + Node/tRPC server, MySQL via Drizzle, Clerk auth, Gemini for text generation, Cloudflare Workers AI (FLUX.1 schnell) for images. Billing is stubbed to "coming soon" — Stripe removed.
+Full-stack app: React 18 (Vite 7) client + Node/tRPC server, MySQL via Drizzle ORM, Clerk auth, Google Gemini multi-model ladder for text generation, Cloudflare Workers AI for 3D visual renders.
 
 **Live demo:** https://pinchforge.chinmayshinde.tech  
 **Demo video:** https://www.youtube.com/watch?v=tRQB1lFF2WA

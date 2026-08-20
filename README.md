@@ -1,45 +1,46 @@
-# PITCHFORGE
+# PINCHFORGE
 
-> **One app link. Six launch-ready posts. Auto-published.**
+> **Mobile App Growth & Distribution Operating System.**  
+> Autonomous Promotion & In-App Virality for iOS & Android Apps · 20+ Production Engines · 100% Verifiable.
 
 [![Demo Video](https://img.shields.io/badge/▶_Watch_Demo-YouTube-red?style=for-the-badge)](https://www.youtube.com/watch?v=tRQB1lFF2WA)
-[![Live App](https://img.shields.io/badge/🚀_Try_Live-No_Login_Needed-black?style=for-the-badge)](https://pinchforge.chinmayshinde.tech/live-demo)
+[![Live App](https://img.shields.io/badge/🚀_Try_Live-No_Login_Needed-black?style=for-the-badge)](https://pinchforge.chinmayshinde.tech)
 
-Turn one app — a store URL, a brief, or a plain description — into launch-ready copy for six platforms at once. Score it. Fix it. Publish it. **No login required to generate, edit, export, or share.**
-
----
-
-## Demo
-
-[![PITCHFORGE Demo](https://img.youtube.com/vi/tRQB1lFF2WA/maxresdefault.jpg)](https://www.youtube.com/watch?v=tRQB1lFF2WA)
-
-🔗 **Live:** https://pinchforge.chinmayshinde.tech  
-🔗 **Try without signing in:** https://pinchforge.chinmayshinde.tech/live-demo
+Turn any mobile store listing (Google Play or Apple App Store URL), PDF brief, or description into an end-to-end multi-channel acquisition and retention campaign in seconds. **No login required to generate, test live mockups, export CSVs, or download HTML landing pages.**
 
 ---
 
-## The problem
+## Live Demo & Video
 
-An indie developer launching an app has to write the same story six different ways — App Store description, Play Store listing, Twitter thread, Instagram caption, LinkedIn post, Product Hunt comment — each with different character limits, different audiences, different tones. Then score it against ASO ranking factors, check for banned phrases, pack the iOS keyword field, and get it posted.
-
-Most teams skip most of this. PITCHFORGE does all of it from one URL.
-
-For install and deploy steps, see [RUN.md](./RUN.md). This document covers **what the product actually does.**
+- 🔗 **Live App:** https://pinchforge.chinmayshinde.tech  
+- 📺 **Video Walkthrough:** https://www.youtube.com/watch?v=tRQB1lFF2WA
 
 ---
 
-## Core generation
+## What PinchForge Solves
 
-- **One source, six outputs** — paste a Google Play / App Store URL, upload a PDF/DOCX/TXT/MD brief, or write a manual description. PITCHFORGE extracts real signal (name, category, features, rating, screenshots) and drafts copy for:
+Launching and growing a mobile app requires managing two distinct phases:
+1. **Phase 1 (Pre-Launch & Acquisition):** Writing store copy for App Store and Google Play, managing multi-channel social launches (Twitter, LinkedIn, Instagram, Product Hunt), designing landing pages, modeling Apple Search Ads keywords, and generating physical store QR collateral.
+2. **Phase 2 (Post-Launch & Retention):** Embedding in-app viral referral SDKs, drafting human developer replies to 1–5 star reviews, drafting release changelogs for app updates, and creating dynamic in-app announcement banners.
+
+Most developers lack a full growth team. PinchForge automates this entire distribution stack from a single URL.
+
+For local run and deployment steps, see [RUN.md](./RUN.md).
+
+---
+
+## 1. Core Multi-Channel Engine
+
+- **One Source URL ➔ 6 Native Channels** — paste an App Store / Google Play URL. PinchForge extracts app metadata, category, screenshots, and formatted store ratings (`4.8 ★`) to generate tailored copy:
 
 | Platform | What gets generated | Limit |
 |---|---|---|
-| **App Store** | Promotional text, keyword-aware | 170 chars |
-| **Google Play** | Short description | 80 chars |
-| **Twitter / X** | Launch thread, hook-first | 280 chars |
-| **Instagram** | Caption + hashtag set | 2,200 chars |
-| **LinkedIn** | Professional announcement | 1,300 chars |
-| **Product Hunt** | Maker comment, community-native | 500 chars |
+| **App Store** | Keyword-aware promotional text | 170 chars |
+| **Google Play** | Memorable short description | 80 chars |
+| **Twitter / X** | Hook-first standalone launch post | 280 chars |
+| **Instagram** | Scroll-stopping caption + curated hashtag set | 2,200 chars |
+| **LinkedIn** | Long-form professional announcement | 1,300 chars |
+| **Product Hunt** | Candid maker comment with value proposition | 500 chars |
 
 - **Language selector** — generate in English, Spanish, French, Hindi, German, Portuguese, or Japanese. Copy is written natively in that language, not translated after the fact. Applies to first generation and per-platform regeneration.
 - **Try a sample app** — one-click sample loader for guests. No setup required.
