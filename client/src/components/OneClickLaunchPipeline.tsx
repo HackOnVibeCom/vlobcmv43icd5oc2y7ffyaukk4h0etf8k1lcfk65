@@ -66,7 +66,7 @@ type OneClickProps = {
 
 export default function OneClickLaunchPipeline({ context }: OneClickProps = {}) {
   const [storeUrl, setStoreUrl] = useState(
-    context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.iwaskidnapped.app&hl=en_GB"
+    context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.instagram.android&hl=en"
   );
   const [isProcessing, setIsProcessing] = useState(false);
   const [pipelineFinished, setPipelineFinished] = useState(false);
@@ -291,22 +291,22 @@ p{color:#d7cec0;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
         </div>
 
         {/* Quick Test Demo URL Button */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginTop: "0.9rem", fontSize: "0.78rem", color: "#94a3b8" }}>
-          <span>Test with real app:</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginTop: "0.9rem", fontSize: "0.78rem", color: "#a8a29e" }}>
+          <span>Test with app link:</span>
           <button
             type="button"
-            onClick={() => setStoreUrl("https://play.google.com/store/apps/details?id=com.iwaskidnapped.app&hl=en_GB")}
+            onClick={() => setStoreUrl("https://play.google.com/store/apps/details?id=com.instagram.android&hl=en")}
             style={{
               background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(255,255,255,0.12)",
-              color: "#818cf8",
+              color: "#f87171",
               padding: "0.2rem 0.6rem",
-              borderRadius: "6px",
+              borderRadius: "4px",
               cursor: "pointer",
               fontWeight: 600,
             }}
           >
-            com.iwaskidnapped.app (Play Store)
+            com.instagram.android (Play Store)
           </button>
         </div>
       </div>

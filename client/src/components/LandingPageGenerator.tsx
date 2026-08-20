@@ -16,11 +16,11 @@ type Context = {
 };
 
 export default function LandingPageGenerator({ context }: { context?: Context }) {
-  const appName = context?.name || "I Was Kidnapped";
-  const dev = context?.developer || "Studio Adventure";
-  const desc = context?.description || "An immersive real-time narrative simulation where your strategic choices determine survival and escape.";
-  const storeUrl = context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.iwaskidnapped.app";
-  const category = context?.category || "Simulation / Adventure";
+  const appName = context?.name || "Mobile App";
+  const dev = context?.developer || "Mobile Studio";
+  const desc = context?.description || "An intuitive and modern mobile experience engineered for speed, utility, and engagement.";
+  const storeUrl = context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.instagram.android";
+  const category = context?.category || "Mobile Application";
   const rating = context?.rating || "4.8";
 
   const [tagline, setTagline] = useState(desc.slice(0, 95));

@@ -15,8 +15,8 @@ type Context = {
 };
 
 export default function AppStoreBadgeStudio({ context }: { context?: Context }) {
-  const appName = context?.name || "I Was Kidnapped";
-  const [storeUrl, setStoreUrl] = useState(context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.iwaskidnapped.app");
+  const appName = context?.name || "Mobile Application";
+  const [storeUrl, setStoreUrl] = useState(context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.instagram.android");
   const [frameTitle, setFrameTitle] = useState(`Scan to Download ${appName}`);
   const [frameSubtitle, setFrameSubtitle] = useState("Available on iOS & Android");
 
