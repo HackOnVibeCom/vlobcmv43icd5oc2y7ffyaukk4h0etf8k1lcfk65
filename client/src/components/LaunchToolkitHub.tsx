@@ -255,7 +255,7 @@ export default function LaunchToolkitHub({ context }: { context: CampaignContext
       <div className="launch-toolkit-hub__content">
         {activeTab === "pipeline" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <OneClickLaunchPipeline />
+            <OneClickLaunchPipeline context={context} />
           </div>
         )}
 

@@ -52,21 +52,33 @@ const CATEGORY_BENCHMARKS: Record<string, { cpiLow: number; cpiHigh: number; sea
   },
 };
 
-export default function OneClickLaunchPipeline() {
-  const [storeUrl, setStoreUrl] = useState("https://play.google.com/store/apps/details?id=com.iwaskidnapped.app&hl=en_GB");
+type OneClickProps = {
+  context?: {
+    name: string;
+    developer?: string;
+    category?: string;
+    description: string;
+    rating?: string;
+    sourceUrl?: string;
+    screenshots?: string[];
+  };
+};
+
+export default function OneClickLaunchPipeline({ context }: OneClickProps = {}) {
+  const [storeUrl, setStoreUrl] = useState(
+    context?.sourceUrl || "https://play.google.com/store/apps/details?id=com.iwaskidnapped.app&hl=en_GB"
+  );
   const [isProcessing, setIsProcessing] = useState(false);
   const [pipelineFinished, setPipelineFinished] = useState(false);
   const [budget, setBudget] = useState<BudgetTier>(50);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Extracted app details
-  const [appInfo, setAppInfo] = useState({
-    name: "I Was Kidnapped",
-    developer: "Studio Adventure",
-    category: "Interactive Story / Simulation",
-    rating: "4.8 ★",
-    desc: "An immersive real-time narrative simulation where your strategic choices determine survival and escape.",
-  });
+  // Extracted app details dynamically synced from context or active URL
+  const appName = context?.name || "Target Mobile App";
+  const appDeveloper = context?.developer || "Mobile Studio";
+  const appCategory = context?.category || "Mobile Application";
+  const appRating = context?.rating ? `${context.rating} ★` : "4.8 ★";
+  const appDesc = context?.description || "An innovative mobile experience engineered for user engagement.";
 
   const [steps, setSteps] = useState<PipelineStep[]>([
     { id: "scrape", label: "Live App Store Scraper", sublabel: "Zero manual entry: extracts metadata, rating, and screenshots", status: "pending" },
@@ -75,6 +87,12 @@ export default function OneClickLaunchPipeline() {
     { id: "campaign", label: "Apple Search Ads & Google App Campaign Modeling", sublabel: "Calculates category CPI benchmarks & generates bulk CSV upload blueprints", status: "pending" },
     { id: "directories", label: "Submit to 100+ App Directories", sublabel: "Dispatches to Product Hunt, BetaList, SaaSHub, AlternativeTo", status: "pending" },
   ]);
+
+  useEffect(() => {
+    if (context?.sourceUrl) {
+      setStoreUrl(context.sourceUrl);
+    }
+  }, [context?.sourceUrl]);
 
   const updateStep = (id: string, updates: Partial<PipelineStep>) => {
     setSteps(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
@@ -97,17 +115,17 @@ export default function OneClickLaunchPipeline() {
     // Step 1: Scrape
     updateStep("scrape", { status: "running" });
     await delay(1200);
-    updateStep("scrape", { status: "done", detail: `Extracted "${appInfo.name}" (${appInfo.category}) · ${appInfo.rating}` });
+    updateStep("scrape", { status: "done", detail: `Extracted "${appName}" (${appCategory}) · ${appRating}` });
 
     // Step 2: Copy
     updateStep("copy", { status: "running" });
     await delay(1100);
-    updateStep("copy", { status: "done", detail: "Generated 6 platform variants with character limit enforcement" });
+    updateStep("copy", { status: "done", detail: `Generated 6 platform variants for ${appName}` });
 
     // Step 3: Landing
     updateStep("landing", { status: "running" });
     await delay(1000);
-    updateStep("landing", { status: "done", detail: "Compiled responsive HTML microsite with real player reviews" });
+    updateStep("landing", { status: "done", detail: `Compiled responsive HTML microsite for ${appName}` });
 
     // Step 4: Campaign modeling
     updateStep("campaign", { status: "running" });
@@ -129,21 +147,21 @@ export default function OneClickLaunchPipeline() {
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>${appInfo.name} — Official Download</title>
+<title>${appName} — Official App Download</title>
 <style>
-body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#090d16;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2rem}
-.card{background:#131c2e;border:1px solid rgba(255,255,255,0.15);padding:3rem 2rem;border-radius:24px;max-width:580px;box-shadow:0 25px 60px rgba(0,0,0,0.6)}
-h1{font-size:2.8rem;margin:0 0 1rem;background:linear-gradient(135deg,#fff,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-p{color:#cbd5e1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
-.btn{display:inline-block;padding:1rem 2.5rem;background:#6366f1;color:#fff;text-decoration:none;font-weight:700;border-radius:14px;box-shadow:0 10px 25px rgba(99,102,241,0.4)}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#151311;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2rem}
+.card{background:#1e1b18;border:1px solid rgba(255,255,255,0.12);padding:3rem 2rem;border-radius:18px;max-width:580px;box-shadow:0 25px 60px rgba(0,0,0,0.6)}
+h1{font-size:2.8rem;margin:0 0 1rem;color:#ffffff}
+p{color:#d7cec0;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
+.btn{display:inline-block;padding:1rem 2.5rem;background:#dc143c;color:#fff;text-decoration:none;font-weight:700;border-radius:8px;box-shadow:0 10px 25px rgba(220,20,60,0.4)}
 </style>
 </head>
 <body>
 <div class="card">
-  <span style="color:#10b981;font-weight:800;font-size:0.85rem">⭐ 4.8 RATING ON GOOGLE PLAY</span>
-  <h1>${appInfo.name}</h1>
-  <p>${appInfo.desc}</p>
-  <a href="${storeUrl}" class="btn">Download Free on Google Play / App Store</a>
+  <span style="color:#4ade80;font-weight:800;font-size:0.85rem">⭐ ${appRating} RATING</span>
+  <h1>${appName}</h1>
+  <p>${appDesc}</p>
+  <a href="${storeUrl}" class="btn">Get ${appName} on App Store / Google Play</a>
 </div>
 </body>
 </html>`;
@@ -152,7 +170,7 @@ p{color:#cbd5e1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${appInfo.name.toLowerCase().replace(/\s+/g, "-")}-microsite.html`;
+    a.download = `${appName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-microsite.html`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Downloaded landing page HTML!");
@@ -163,29 +181,21 @@ p{color:#cbd5e1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
     const csvRows = [
       ["Campaign", "Ad Group", "Keyword", "Match Type", "Bid (CPT)", "Status"],
       ...keywords.map(kw => [
-        `${appInfo.name} - Tier 1 Search`,
+        `${appName} - Tier 1 Search`,
         "Core Category Search",
         kw,
         "EXACT",
         "$0.45",
         "ENABLED",
       ]),
-      ...keywords.map(kw => [
-        `${appInfo.name} - Tier 1 Discovery`,
-        "Broad Discovery",
-        kw,
-        "BROAD",
-        "$0.32",
-        "ENABLED",
-      ]),
     ];
 
-    const csvContent = csvRows.map(e => e.map(cell => `"${cell}"`).join(",")).join("\n");
+    const csvContent = csvRows.map(e => e.join(",")).join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${appInfo.name.toLowerCase().replace(/\s+/g, "-")}-apple-search-ads-bulk.csv`;
+    a.download = `ASA_Bulk_Upload_${appName.replace(/[^a-zA-Z0-9]+/g, "_")}.csv`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Downloaded Apple Search Ads Bulk Upload CSV!");
@@ -385,8 +395,8 @@ p{color:#cbd5e1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem}
               </span>
             </div>
 
-            <p style={{ color: "#94a3b8", fontSize: "0.8rem", margin: "0 0 1rem 0" }}>
-              Forecast real installs across Apple Search Ads (ASA) & Google App Campaigns based on <b>{appInfo.category}</b> benchmarks.
+            <p style={{ color: "#a8a29e", fontSize: "0.8rem", margin: "0 0 1rem 0" }}>
+              Forecast real installs across Apple Search Ads (ASA) & Google App Campaigns based on <b>{appCategory}</b> benchmarks.
             </p>
 
             {/* Budget Selector */}
